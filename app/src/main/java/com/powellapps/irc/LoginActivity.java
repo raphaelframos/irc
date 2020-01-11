@@ -50,8 +50,17 @@ public class LoginActivity extends AppCompatActivity {
                 .build();
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+<<<<<<< Updated upstream
         signIn();
         startActivity(new Intent(this, MainActivity.class));
+=======
+        if(FirebaseUtils.isUser()){
+            startActivity(new Intent(this, ChatActivity.class));
+            //goToMain();
+        }else{
+            signIn();
+        }
+>>>>>>> Stashed changes
 
         startActivity(new Intent(this, ChatActivity.class));
 

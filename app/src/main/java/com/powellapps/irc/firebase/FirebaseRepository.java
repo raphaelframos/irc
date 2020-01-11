@@ -30,7 +30,7 @@ public class FirebaseRepository {
 
 
     public static CollectionReference getChat(String id) {
-       return FirebaseFirestore.getInstance().collection("ConstantUtils.CHANNELS").document(id).collection("conversas");
+       return FirebaseFirestore.getInstance().collection(ConstantsUtils.CHANNELS).document(id).collection(ConstantsUtils.CHAT);
     }
 
     public static void save(IrcChannel ircChannel) {

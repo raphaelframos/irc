@@ -50,7 +50,6 @@ public class ChatActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerViewChat.setLayoutManager(layoutManager);
         recyclerViewChat.setHasFixedSize(true);
-        layoutManager.setReverseLayout(true);
         recyclerViewChat.setAdapter(adapter);
         recyclerViewChat.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
@@ -67,9 +66,10 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-        FirebaseRepository.getChat("1234").addSnapshotListener(new EventListener<QuerySnapshot>() {
+        FirebaseRepository.getChat("1234").orderBy("creationDate").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                    messagelist.clear();
                     for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()) {
                         Log.d("teste", queryDocumentSnapshots.toString());
                         if(documentSnapshot.exists()) {

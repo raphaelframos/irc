@@ -8,4 +8,9 @@ public class ConstantsUtils {
     public static final String POSITION = "position";
     public static final String USERS = "users";
     public static final String ID = "id";
+<<<<<<< Updated upstream
+=======
+    public static final String ACCESSED = "acessed";
+    public static final String CHAT = "chat" ;
+>>>>>>> Stashed changes
 }
