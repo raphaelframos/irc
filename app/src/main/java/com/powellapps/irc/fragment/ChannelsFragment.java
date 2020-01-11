@@ -69,7 +69,7 @@ public class ChannelsFragment extends Fragment {
         recyclerViewChannels = getView().findViewById(R.id.reciclerChannels);
         recyclerViewChannels.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewChannels.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
-        adapter = new ChannelAdapter();
+        adapter = new ChannelAdapter(getActivity());
         recyclerViewChannels.setAdapter(adapter);
         viewModelChannel = ViewModelProviders.of(this).get(ViewModelChannel.class);
         setHasOptionsMenu(true);

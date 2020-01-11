@@ -20,6 +20,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.powellapps.irc.adapter.ChatAdapter;
 import com.powellapps.irc.firebase.FirebaseRepository;
 import com.powellapps.irc.model.MensagemChat;
+import com.powellapps.irc.utils.ConstantsUtils;
 import com.powellapps.irc.utils.FirebaseUtils;
 
 import java.util.ArrayList;
@@ -51,58 +52,43 @@ public class ChatActivity extends AppCompatActivity {
         recyclerViewChat.setLayoutManager(layoutManager);
         recyclerViewChat.setHasFixedSize(true);
         recyclerViewChat.setAdapter(adapter);
-        recyclerViewChat.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
-            @Override
-            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                if (bottom < oldBottom) {
-                    recyclerViewChat.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            recyclerViewChat.scrollToPosition(messagelist.size());
-
-                        }
-                    });
-                }
+        recyclerViewChat.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
+            if (bottom < oldBottom) {
+                recyclerViewChat.post(() -> recyclerViewChat.scrollToPosition(messagelist.size()));
             }
         });
 
-        FirebaseRepository.getChat("1234").orderBy("creationDate").addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                    messagelist.clear();
-                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()) {
-                        Log.d("teste", queryDocumentSnapshots.toString());
-                        if(documentSnapshot.exists()) {
-                            messagelist.add(documentSnapshot.toObject(MensagemChat.class));
+        String id = getIntent().getStringExtra(ConstantsUtils.ID);
 
-                        }
+        FirebaseRepository.getChat(id).orderBy(ConstantsUtils.CREATION_DATE).addSnapshotListener((queryDocumentSnapshots, e) -> {
+                messagelist.clear();
+                for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()) {
+                    if(documentSnapshot.exists()) {
+                        messagelist.add(documentSnapshot.toObject(MensagemChat.class));
                     }
-
-                    if(messagelist.size() > 0) {
-                    adapter.update(messagelist);
                 }
+
+                if(messagelist.size() > 0) {
+                adapter.update(messagelist);
             }
         });
 
 
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String message = editTextMessage.getText().toString();
+        button.setOnClickListener(v -> {
+            String message = editTextMessage.getText().toString();
 
-                try{
-                        MensagemChat mensagemChat = new MensagemChat();
-                        mensagemChat.setNameUser(user.getDisplayName());
-                        mensagemChat.setIdUser(user.getUid());
-                        mensagemChat.setText(message);
-                        mensagemChat.setCreationDate(Calendar.getInstance().getTimeInMillis());
-                        editTextMessage.setText("");
-                        FirebaseUtils.getConversas("1234").add(mensagemChat.getMap());
+            try{
+                    MensagemChat mensagemChat = new MensagemChat();
+                    mensagemChat.setNameUser(user.getDisplayName());
+                    mensagemChat.setIdUser(user.getUid());
+                    mensagemChat.setText(message);
+                    mensagemChat.setCreationDate(Calendar.getInstance().getTimeInMillis());
+                    editTextMessage.setText("");
+                    FirebaseUtils.getConversas(id).add(mensagemChat.getMap());
 
-                }catch (Exception e){
-                    e.printStackTrace();
+            }catch (Exception e){
+                e.printStackTrace();
 
-                }
             }
         });
 

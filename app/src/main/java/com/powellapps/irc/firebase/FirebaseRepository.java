@@ -22,7 +22,7 @@ public class FirebaseRepository {
     private MutableLiveData<List<IrcChannel>> mutableLiveData = new MutableLiveData<>();
 
     public LiveData<List<IrcChannel>> getMutableLiveData() {
-        getChannels().addSnapshotListener((queryDocumentSnapshots, e) -> {
+        getChannels().orderBy(ConstantsUtils.NAME).addSnapshotListener((queryDocumentSnapshots, e) -> {
             mutableLiveData.setValue(queryDocumentSnapshots.toObjects(IrcChannel.class));
         });
         return mutableLiveData;

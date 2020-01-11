@@ -1,5 +1,6 @@
 package com.powellapps.irc.model;
 
+import com.google.firebase.firestore.DocumentId;
 import com.powellapps.irc.utils.ConstantsUtils;
 
 import java.util.HashMap;
@@ -9,10 +10,10 @@ public class IrcChannel {
     private String name;
     private String description;
     private String creator;
+    @DocumentId
+    private String id;
 
-    public IrcChannel(){
-        setName("Teste");
-    }
+    public IrcChannel(){}
 
     public IrcChannel(String id) {
         setCreator(id);
@@ -52,5 +53,13 @@ public class IrcChannel {
 
     public boolean contain(String text) {
         return getName().contains(text);
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }
