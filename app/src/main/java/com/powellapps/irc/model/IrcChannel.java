@@ -49,4 +49,8 @@ public class IrcChannel {
         map.put(ConstantsUtils.CREATOR, getCreator());
         return map;
     }
+
+    public boolean contain(String text) {
+        return getName().contains(text);
+    }
 }
