@@ -1,5 +1,6 @@
 package com.powellapps.irc.model;
 
+import com.google.firebase.auth.FirebaseUser;
 import com.powellapps.irc.utils.ConstantsUtils;
 
 import java.util.HashMap;
@@ -17,6 +18,11 @@ public class User {
     public User(String name, String id) {
         this.name = name;
         this.id = id;
+    }
+
+    public User(FirebaseUser user) {
+        setId(user.getUid());
+        setName(user.getDisplayName());
     }
 
     public String getId() {

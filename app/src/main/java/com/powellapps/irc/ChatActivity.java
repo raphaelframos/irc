@@ -20,6 +20,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.powellapps.irc.adapter.ChatAdapter;
 import com.powellapps.irc.firebase.FirebaseRepository;
 import com.powellapps.irc.model.MensagemChat;
+import com.powellapps.irc.model.User;
 import com.powellapps.irc.utils.ConstantsUtils;
 import com.powellapps.irc.utils.FirebaseUtils;
 
@@ -59,6 +60,8 @@ public class ChatActivity extends AppCompatActivity {
         });
 
         String id = getIntent().getStringExtra(ConstantsUtils.ID);
+
+        FirebaseRepository.add(id, new User(FirebaseUtils.getUser()));
 
         FirebaseRepository.getChat(id).orderBy(ConstantsUtils.CREATION_DATE).addSnapshotListener((queryDocumentSnapshots, e) -> {
                 messagelist.clear();
