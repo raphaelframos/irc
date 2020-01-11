@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -34,13 +36,11 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
     private GoogleSignInAccount account;
-    private TextView textViewNome;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        textViewNome = findViewById(R.id.txtNome);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -50,13 +50,22 @@ public class LoginActivity extends AppCompatActivity {
                 .build();
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-        signIn();
+        if(FirebaseUtils.isUser()){
+            goToMain();
+        }else{
+            signIn();
+        }
+
+        Button buttonLogin = findViewById(R.id.button_login);
+        buttonLogin.setOnClickListener(v -> {
+            signIn();
+        });
+
+    }
+
+
+    private void goToMain() {
         startActivity(new Intent(this, MainActivity.class));
-
-        startActivity(new Intent(this, ChatActivity.class));
-
-
-
     }
 
     private void signIn() {
@@ -86,14 +95,11 @@ public class LoginActivity extends AppCompatActivity {
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
         AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
-        mAuth.signInWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()) {
-                    checkUser();
-                } else {
-                    finish();
-                }
+        mAuth.signInWithCredential(credential).addOnCompleteListener(task -> {
+            if(task.isSuccessful()) {
+                checkUser();
+            } else {
+                finish();
             }
         });
 
@@ -104,23 +110,19 @@ public class LoginActivity extends AppCompatActivity {
     private void checkUser() {
         final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         final DocumentReference getId = FirebaseUtils.getBanco().collection("users").document(firebaseUser.getUid());
-        getId.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+        getId.get().addOnCompleteListener(task -> {
 
-                if (task.isSuccessful()) {
-                    DocumentSnapshot documentSnapshot = task.getResult();
-                    if (documentSnapshot.exists()) {
-                        Log.i("tag", "User exist");
-                        finish();
-                    } else {
-                        String id = firebaseUser.getUid();
-                        User user = new User(account.getDisplayName(), id);
-                        FirebaseUtils.saveUser(user);
-                        finish();
-                    }
+            if (task.isSuccessful()) {
+                DocumentSnapshot documentSnapshot = task.getResult();
+                if (!documentSnapshot.exists()) {
+                    String id = firebaseUser.getUid();
+                    User user = new User(account.getDisplayName(), id);
+                    FirebaseUtils.saveUser(user);
 
                 }
+                goToMain();
+                finish();
+
             }
         });
     }

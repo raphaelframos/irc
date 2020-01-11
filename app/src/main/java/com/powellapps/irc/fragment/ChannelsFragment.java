@@ -40,7 +40,7 @@ import java.util.List;
  */
 public class ChannelsFragment extends Fragment {
 
-    private static final int ALL = 0;
+    private static final int ALL = 2;
     private ChannelAdapter adapter;
     private ViewModelChannel viewModelChannel;
     private RecyclerView recyclerViewChannels;
@@ -79,6 +79,7 @@ public class ChannelsFragment extends Fragment {
     public void onResume() {
         super.onResume();
         int position = getArguments().getInt(ConstantsUtils.POSITION);
+        Toast.makeText(getContext(), "Posicao " + position, Toast.LENGTH_LONG).show();
         if(position == ALL){
             getAllChannels();
         }else{
@@ -91,6 +92,7 @@ public class ChannelsFragment extends Fragment {
         viewModelChannel.getChannelsAccesseds().observe(this, ircChannels -> {
             adapter.update(ircChannels, recyclerViewChannels);
         });
+
     }
 
     @Override
@@ -103,22 +105,27 @@ public class ChannelsFragment extends Fragment {
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                findChannel(query);
                 return false;
             }
             @Override
             public boolean onQueryTextChange(String newText) {
 
-                FirebaseUtils.findChannels(newText).addSnapshotListener((queryDocumentSnapshots, e) -> {
-                    List<IrcChannel> channels = new ArrayList<>();
-                    for(DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()){
-                        channels.add(documentSnapshot.toObject(IrcChannel.class));
-                    }
-                    adapter.update(channels, recyclerViewChannels);
-                });
+                findChannel(newText);
                 return true;
             }
         });
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    private void findChannel(String newText) {
+        FirebaseUtils.findChannels(newText).addSnapshotListener((queryDocumentSnapshots, e) -> {
+            List<IrcChannel> channels = new ArrayList<>();
+            for(DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()){
+                channels.add(documentSnapshot.toObject(IrcChannel.class));
+            }
+            adapter.update(channels, recyclerViewChannels);
+        });
     }
 
     @Override
@@ -127,7 +134,7 @@ public class ChannelsFragment extends Fragment {
         switch (item.getItemId()){
 
             case R.id.item_new_channel:
-                NewChannelDialogFragment.newInstance("1").show(getFragmentManager(), "newChannel");
+                NewChannelDialogFragment.newInstance(FirebaseUtils.getUserId()).show(getFragmentManager(), "newChannel");
                 break;
         }
         return super.onOptionsItemSelected(item);

@@ -1,11 +1,15 @@
 package com.powellapps.irc.model;
 
+import com.powellapps.irc.utils.ConstantsUtils;
+
 import java.util.HashMap;
+import java.util.List;
 
 public class User {
 
    private String name;
    private String id;
+   private List<String> channels;
 
     public User() {
     }
@@ -33,10 +37,18 @@ public class User {
 
     public HashMap<String, Object> returnUser() {
         HashMap<String, Object> user = new HashMap<>();
-        user.put("id", getId());
-        user.put("name", getName());
+        user.put(ConstantsUtils.ID, getId());
+        user.put(ConstantsUtils.NAME, getName());
+        user.put(ConstantsUtils.ACCESSED, channels);
         return user;
     }
 
 
+    public List<String> getChannels() {
+        return channels;
+    }
+
+    public void setChannels(List<String> channels) {
+        this.channels = channels;
+    }
 }

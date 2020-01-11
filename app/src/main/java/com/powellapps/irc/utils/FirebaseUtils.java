@@ -32,16 +32,18 @@ public class FirebaseUtils extends AppCompatActivity {
 
     public static FirebaseUser getUser() {
         return FirebaseAuth.getInstance().getCurrentUser();
-
     }
 
     public static CollectionReference getConversas(String id) {
         return FirebaseFirestore.getInstance().collection("channels").document(id).collection("conversas");
     }
 
-
     public static Query findChannels(String substring) {
         Query query = FirebaseRepository.getChannels().whereGreaterThanOrEqualTo(ConstantsUtils.NAME, substring);
         return query;
+    }
+
+    public static boolean isUser() {
+        return getUser() != null && !getUserId().isEmpty();
     }
 }
