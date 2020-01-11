@@ -25,9 +25,17 @@ public class FirebaseUtils extends AppCompatActivity {
         return FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
 
+    public static FirebaseUser getUser(){
+        return FirebaseAuth.getInstance().getCurrentUser();
+    }
+
 
     public static Query findChannels(String substring) {
         Query query = FirebaseRepository.getChannels().whereGreaterThanOrEqualTo(ConstantsUtils.NAME, substring);
         return query;
+    }
+
+    public static boolean isUser() {
+        return getUser() != null && !getUserId().isEmpty();
     }
 }
