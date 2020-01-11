@@ -6,6 +6,7 @@
     tools:context=".fragment.ChannelsFragment">
 
     <androidx.recyclerview.widget.RecyclerView
+        android:layoutAnimation="@anim/layout_animation_fall_down"
         android:id="@+id/reciclerChannels"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

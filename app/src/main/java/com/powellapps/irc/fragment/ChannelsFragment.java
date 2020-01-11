@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.powellapps.irc.R;
 import com.powellapps.irc.adapter.ChannelAdapter;
@@ -27,9 +26,10 @@ import java.util.ArrayList;
  */
 public class ChannelsFragment extends Fragment {
 
-    private static final int ALL = 2;
+    private static final int ALL = 0;
     private ChannelAdapter adapter;
     private ViewModelChannel viewModelChannel;
+    private RecyclerView recyclerViewChannels;
 
 
     public ChannelsFragment() {}
@@ -46,20 +46,17 @@ public class ChannelsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_channels, container, false);
-
-        return view;
+        return inflater.inflate(R.layout.fragment_channels, container, false);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        RecyclerView recyclerViewChannels = getView().findViewById(R.id.reciclerChannels);
+        recyclerViewChannels = getView().findViewById(R.id.reciclerChannels);
         recyclerViewChannels.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewChannels.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
         adapter = new ChannelAdapter();
         recyclerViewChannels.setAdapter(adapter);
-
         viewModelChannel = ViewModelProviders.of(this).get(ViewModelChannel.class);
 
     }
@@ -71,13 +68,14 @@ public class ChannelsFragment extends Fragment {
         if(position == ALL){
             getAllChannels();
         }else{
-            adapter.update(new ArrayList<>());
+            adapter.update(new ArrayList<>(), recyclerViewChannels);
         }
+
     }
 
     private void getAllChannels() {
         viewModelChannel.getChannelsAccesseds().observe(this, ircChannels -> {
-            adapter.update(ircChannels);
+            adapter.update(ircChannels, recyclerViewChannels);
         });
     }
 }
