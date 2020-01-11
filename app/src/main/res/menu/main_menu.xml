@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/item_search"
+        android:icon="@drawable/ic_search_black_24dp"
+        android:title="Buscar"
+        app:showAsAction="always"
+        app:actionViewClass="android.widget.SearchView" />
+
+    <item android:id="@+id/item_new_channel" android:icon="@drawable/ic_action_new" android:title="Novo" app:showAsAction="always"></item>
+</menu>
