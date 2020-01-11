@@ -8,4 +8,6 @@
     <string name="disponivel">Disponível</string>
     <string name="acessados">Acessados</string>
     <string name="todos">Todos</string>
+    <string name="busca_canal">Busca canal</string>
+    <string name="ligados">Ligados</string>
 </resources>

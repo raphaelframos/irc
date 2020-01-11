@@ -31,7 +31,7 @@ public class FirebaseRepository {
         getChannels().add(ircChannel.map());
     }
 
-    private static CollectionReference getChannels() {
+    public static CollectionReference getChannels() {
         return FirebaseFirestore.getInstance().collection(ConstantsUtils.CHANNELS);
     }
 

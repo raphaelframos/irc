@@ -10,16 +10,30 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
+import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.powellapps.irc.R;
 import com.powellapps.irc.adapter.ChannelAdapter;
+import com.powellapps.irc.model.IrcChannel;
 import com.powellapps.irc.utils.ConstantsUtils;
+import com.powellapps.irc.utils.FirebaseUtils;
 import com.powellapps.irc.viewmodel.ViewModelChannel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,7 +44,6 @@ public class ChannelsFragment extends Fragment {
     private ChannelAdapter adapter;
     private ViewModelChannel viewModelChannel;
     private RecyclerView recyclerViewChannels;
-
 
     public ChannelsFragment() {}
 
@@ -58,6 +71,7 @@ public class ChannelsFragment extends Fragment {
         adapter = new ChannelAdapter();
         recyclerViewChannels.setAdapter(adapter);
         viewModelChannel = ViewModelProviders.of(this).get(ViewModelChannel.class);
+        setHasOptionsMenu(true);
 
     }
 
@@ -77,5 +91,45 @@ public class ChannelsFragment extends Fragment {
         viewModelChannel.getChannelsAccesseds().observe(this, ircChannels -> {
             adapter.update(ircChannels, recyclerViewChannels);
         });
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.main_menu, menu);
+
+        MenuItem mSearch = menu.findItem(R.id.item_search);
+        SearchView mSearchView = (SearchView) mSearch.getActionView();
+        mSearchView.setQueryHint(getString(R.string.busca_canal));
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                FirebaseUtils.findChannels(newText).addSnapshotListener((queryDocumentSnapshots, e) -> {
+                    List<IrcChannel> channels = new ArrayList<>();
+                    for(DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()){
+                        channels.add(documentSnapshot.toObject(IrcChannel.class));
+                    }
+                    adapter.update(channels, recyclerViewChannels);
+                });
+                return true;
+            }
+        });
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()){
+
+            case R.id.item_new_channel:
+                NewChannelDialogFragment.newInstance("1").show(getFragmentManager(), "newChannel");
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

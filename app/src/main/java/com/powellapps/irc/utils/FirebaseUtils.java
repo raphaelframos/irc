@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.powellapps.irc.firebase.FirebaseRepository;
 import com.powellapps.irc.model.User;
 
 public class FirebaseUtils extends AppCompatActivity {
@@ -24,4 +26,8 @@ public class FirebaseUtils extends AppCompatActivity {
     }
 
 
+    public static Query findChannels(String substring) {
+        Query query = FirebaseRepository.getChannels().whereGreaterThanOrEqualTo(ConstantsUtils.NAME, substring);
+        return query;
+    }
 }
