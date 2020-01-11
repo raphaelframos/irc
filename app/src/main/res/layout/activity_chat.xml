@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    tools:context=".ChatActivity">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView_chat"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginRight="6dp"
+        android:layout_marginLeft="6dp"
+        android:layout_marginBottom="10dp"
+        android:gravity="center_vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_edittext"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginRight="6dp"
+            android:paddingRight="16dp"
+            android:paddingLeft="16dp"
+            android:layout_marginBottom="3dp"
+            android:layout_marginTop="3dp"
+            android:elevation="2dp">
+
+            <EditText
+                android:id="@+id/editText_mensagem"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="string/digite_sua_mensagem"
+                android:ems="10"
+                android:background="@android:color/white"
+                android:inputType="textCapWords|textCapSentences|textMultiLine" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Button" />
+    </LinearLayout>
+
+</LinearLayout>

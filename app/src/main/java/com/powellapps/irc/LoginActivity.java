@@ -53,6 +53,10 @@ public class LoginActivity extends AppCompatActivity {
         signIn();
         startActivity(new Intent(this, MainActivity.class));
 
+        startActivity(new Intent(this, ChatActivity.class));
+
+
+
     }
 
     private void signIn() {
