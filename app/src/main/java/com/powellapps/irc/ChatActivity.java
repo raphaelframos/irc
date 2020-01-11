@@ -2,6 +2,9 @@ package com.powellapps.irc;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,11 +21,13 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.powellapps.irc.adapter.ChatAdapter;
+import com.powellapps.irc.adapter.UserChannelAdapter;
 import com.powellapps.irc.firebase.FirebaseRepository;
 import com.powellapps.irc.model.MensagemChat;
 import com.powellapps.irc.model.User;
 import com.powellapps.irc.utils.ConstantsUtils;
 import com.powellapps.irc.utils.FirebaseUtils;
+import com.powellapps.irc.viewmodel.ViewModelChannel;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -35,6 +40,7 @@ public class ChatActivity extends AppCompatActivity {
     private FirebaseUser user;
     private EditText editTextMessage;
     private Button button;
+    private UserChannelAdapter usersAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +48,8 @@ public class ChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat);
         user = FirebaseUtils.getUser();
         RecyclerView recyclerViewChat = findViewById(R.id.recyclerView_chat);
+        RecyclerView recyclerViewUsers = findViewById(R.id.recyclerView_users);
+
         button = findViewById(R.id.button);
 
         editTextMessage = findViewById(R.id.editText_mensagem);
@@ -59,6 +67,10 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+        recyclerViewUsers.setLayoutManager(new GridLayoutManager(getApplicationContext(), 3));
+        usersAdapter = new UserChannelAdapter();
+        recyclerViewUsers.setAdapter(usersAdapter);
+
         String id = getIntent().getStringExtra(ConstantsUtils.ID);
 
         FirebaseRepository.add(id, new User(FirebaseUtils.getUser()));
@@ -74,6 +86,10 @@ public class ChatActivity extends AppCompatActivity {
                 if(messagelist.size() > 0) {
                 adapter.update(messagelist);
             }
+        });
+
+        ViewModelProviders.of(this).get(ViewModelChannel.class).getUsersInChannel(id).observe(this, users -> {
+            usersAdapter.update(users);
         });
 
 

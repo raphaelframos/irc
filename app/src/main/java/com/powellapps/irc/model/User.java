@@ -10,6 +10,7 @@ public class User {
 
    private String name;
    private String id;
+   private String office;
    private List<String> channels;
 
     public User() {
@@ -45,6 +46,7 @@ public class User {
         HashMap<String, Object> user = new HashMap<>();
         user.put(ConstantsUtils.ID, getId());
         user.put(ConstantsUtils.NAME, getName());
+        user.put(ConstantsUtils.OFFICE, getOffice());
         user.put(ConstantsUtils.ACCESSED, channels);
         return user;
     }
@@ -56,5 +58,17 @@ public class User {
 
     public void setChannels(List<String> channels) {
         this.channels = channels;
+    }
+
+    public String getNameChannel() {
+        return "@"+getName();
+    }
+
+    public String getOffice() {
+        return office;
+    }
+
+    public void setOffice(String office) {
+        this.office = office;
     }
 }

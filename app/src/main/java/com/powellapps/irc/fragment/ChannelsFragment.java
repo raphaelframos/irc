@@ -66,7 +66,7 @@ public class ChannelsFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        recyclerViewChannels = getView().findViewById(R.id.reciclerChannels);
+        recyclerViewChannels = getView().findViewById(R.id.recyclerView_channels);
         recyclerViewChannels.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewChannels.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
         adapter = new ChannelAdapter(getActivity());
