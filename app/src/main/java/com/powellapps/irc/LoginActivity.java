@@ -52,11 +52,6 @@ public class LoginActivity extends AppCompatActivity {
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         signIn();
 
-<<<<<<< HEAD
-=======
-
->>>>>>> d1c3b5b... salvando usuario no firestore
-
     }
 
     private void signIn() {
