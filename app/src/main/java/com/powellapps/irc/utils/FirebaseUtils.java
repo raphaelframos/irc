@@ -18,7 +18,7 @@ public class FirebaseUtils extends AppCompatActivity {
     public static void saveUser(final User user) {
         FirebaseUser userfirebase = FirebaseAuth.getInstance().getCurrentUser();
         String id = userfirebase.getUid();
-        FirebaseUtils.getBanco().collection(ConstantUtils.USERS).document(id).set(user.returnUser());
+        FirebaseUtils.getBanco().collection(ConstantsUtils.USERS).document(id).set(user.returnUser());
     }
 
     public static String getUserId(){

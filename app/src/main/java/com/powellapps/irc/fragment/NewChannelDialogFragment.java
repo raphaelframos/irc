@@ -17,6 +17,7 @@ import android.widget.ListPopupWindow;
 import com.powellapps.irc.R;
 import com.powellapps.irc.firebase.FirebaseRepository;
 import com.powellapps.irc.model.IrcChannel;
+import com.powellapps.irc.utils.ConstantsUtils;
 
 
 /**
@@ -56,7 +57,7 @@ public class NewChannelDialogFragment extends DialogFragment {
         Button buttonCreate = getView().findViewById(R.id.button_create);
 
         buttonCreate.setOnClickListener(v -> {
-            String id = getArguments().getString("id");
+            String id = getArguments().getString(ConstantsUtils.ID);
             String name = editTextName.getText().toString();
             String description = editTextDescription.getText().toString();
             IrcChannel ircChannel = new IrcChannel(id);
