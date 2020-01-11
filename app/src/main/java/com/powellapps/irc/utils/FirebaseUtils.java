@@ -19,5 +19,9 @@ public class FirebaseUtils extends AppCompatActivity {
         FirebaseUtils.getBanco().collection(ConstantUtils.USERS).document(id).set(user.returnUser());
     }
 
+    public static String getUserId(){
+        return FirebaseAuth.getInstance().getCurrentUser().getUid();
+    }
+
 
 }

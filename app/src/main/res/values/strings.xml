@@ -5,4 +5,7 @@
     <string name="criar">Criar</string>
     <string name="novo_canal">Novo Canal</string>
     <string name="nome">Nome</string>
+    <string name="disponivel">Disponível</string>
+    <string name="acessados">Acessados</string>
+    <string name="todos">Todos</string>
 </resources>
