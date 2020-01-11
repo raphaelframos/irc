@@ -3,7 +3,6 @@ package com.powellapps.irc.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,12 +17,12 @@ import java.util.List;
 
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
-    private List<MensagemChat> mensagens;
-    private static final int TIPO_ENVIA = 0;
-    private static final int TIPO_RECEBE = 1;
+    private List<MensagemChat> messages;
+    private static final int TYPE_SEND = 0;
+    private static final int TYPE_RECEIVE = 1;
 
     public ChatAdapter(List<MensagemChat> mensagemChats) {
-        mensagens = mensagemChats;
+        messages = mensagemChats;
     }
 
     @NonNull
@@ -31,10 +30,10 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
 
-        if (viewType == TIPO_RECEBE){
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_recebe, parent, false);
+        if (viewType == TYPE_RECEIVE){
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_receive, parent, false);
         } else {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_envia, parent, false);
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_send, parent, false);
         }
 
         return new ViewHolder(view);
@@ -42,29 +41,29 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        MensagemChat mensagemChat = mensagens.get(position);
+        MensagemChat mensagemChat = messages.get(position);
         holder.set(mensagemChat);
     }
 
     @Override
     public int getItemCount() {
-        return mensagens.size();
+        return messages.size();
     }
 
     @Override
     public int getItemViewType(int position) {
-        MensagemChat mensagem = mensagens.get(position);
+        MensagemChat message = messages.get(position);
         String idUser = FirebaseUtils.getIdUser();
 
-        if (idUser.equals(mensagem.getIdUser())){
-            return TIPO_ENVIA;
+        if (idUser.equals(message.getIdUser())){
+            return TYPE_SEND;
         }
 
-        return TIPO_RECEBE;
+        return TYPE_RECEIVE;
     }
 
     public void update(List<MensagemChat> mensagens) {
-        this.mensagens = mensagens;
+        this.messages = mensagens;
         notifyDataSetChanged();
     }
 
@@ -77,9 +76,9 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-          textViewName = itemView.findViewById(R.id.textView_nome_chat);
-          textViewMessage = itemView.findViewById(R.id.textView_mensagem);
-          textViewDate = itemView.findViewById(R.id.textView_data_chat);
+          textViewName = itemView.findViewById(R.id.textView_name_chat);
+          textViewMessage = itemView.findViewById(R.id.textView_message);
+          textViewDate = itemView.findViewById(R.id.textView_date_chat);
         }
 
         public void set(MensagemChat mensagemChat) {

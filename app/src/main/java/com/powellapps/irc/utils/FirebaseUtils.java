@@ -35,7 +35,7 @@ public class FirebaseUtils extends AppCompatActivity {
     }
 
     public static CollectionReference getConversas(String id) {
-        return FirebaseFirestore.getInstance().collection("channels").document(id).collection("conversas");
+        return FirebaseFirestore.getInstance().collection(ConstantsUtils.CHANNELS).document(id).collection(ConstantsUtils.CHAT);
     }
 
     public static Query findChannels(String substring) {

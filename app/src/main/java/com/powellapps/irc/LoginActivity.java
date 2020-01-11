@@ -50,7 +50,8 @@ public class LoginActivity extends AppCompatActivity {
                 .build();
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-        if(FirebaseUtils.isUser()){
+        
+      if(FirebaseUtils.isUser()){
             goToMain();
         }else{
             signIn();
