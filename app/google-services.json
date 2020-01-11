@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "539850976315",
+    "firebase_url": "https://irc4students.firebaseio.com",
+    "project_id": "irc4students",
+    "storage_bucket": "irc4students.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:539850976315:android:88c92229bb46f9ee16801e",
+        "android_client_info": {
+          "package_name": "com.powellapps.irc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "539850976315-g3neah5irvreup1cbtu7pndjsdb2gl3n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.powellapps.irc",
+            "certificate_hash": "ffe497aaebe21a21c28b78cbfc89c5f9b34aa674"
+          }
+        },
+        {
+          "client_id": "539850976315-cr69qbcrhip9q4khu32uh40v01k5hk7b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAx9aCh8rUsCa-th6GV8X5b1VX4fjhEbeQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "539850976315-cr69qbcrhip9q4khu32uh40v01k5hk7b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
