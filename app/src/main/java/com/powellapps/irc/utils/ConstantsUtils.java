@@ -5,4 +5,5 @@ public class ConstantsUtils {
     public static final String DESCRIPTION = "description";
     public static final String CREATOR = "creator";
     public static final String CHANNELS = "channels";
+    public static final String POSITION = "position";
 }

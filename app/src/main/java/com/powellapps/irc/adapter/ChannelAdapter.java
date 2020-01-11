@@ -50,7 +50,7 @@ public class ChannelAdapter extends RecyclerView.Adapter<ChannelAdapter.ViewHold
         }
 
         public void bind(IrcChannel ircChannel) {
-            textViewChannelName.setText(ircChannel.getName());
+            textViewChannelName.setText("#" + ircChannel.getName());
         }
     }
 }
