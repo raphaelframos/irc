@@ -18,6 +18,7 @@ public class ViewModelChannel extends AndroidViewModel {
 
     public ViewModelChannel(@NonNull Application application) {
         super(application);
+        firebaseRepository = new FirebaseRepository();
     }
 
     public LiveData<List<IrcChannel>> getChannelsAccesseds() {
