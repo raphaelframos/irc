@@ -52,6 +52,10 @@ public class LoginActivity extends AppCompatActivity {
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         signIn();
 
+        startActivity(new Intent(this, ChatActivity.class));
+
+
+
     }
 
     private void signIn() {
