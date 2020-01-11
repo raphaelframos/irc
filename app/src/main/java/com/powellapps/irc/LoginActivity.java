@@ -1,5 +1,6 @@
 package com.powellapps.irc;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -13,13 +14,17 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.powellapps.irc.model.User;
+import com.powellapps.irc.utils.FirebaseUtils;
 
 import java.nio.channels.Channel;
 
@@ -28,6 +33,7 @@ public class LoginActivity extends AppCompatActivity {
     private int RC_SIGN_IN = 0;
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
+    private GoogleSignInAccount account;
     private TextView textViewNome;
 
     @Override
@@ -45,8 +51,6 @@ public class LoginActivity extends AppCompatActivity {
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         signIn();
-
-        startActivity(new Intent(this, MainActivity.class));
 
     }
 
@@ -66,8 +70,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
-           GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-           textViewNome.setText(account.getDisplayName());
+            account = completedTask.getResult(ApiException.class);
+            firebaseAuthWithGoogle(account);
 
         } catch (ApiException e) {
 
@@ -75,7 +79,46 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
+    private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
+        AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
+        mAuth.signInWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if(task.isSuccessful()) {
+                    checkUser();
+                } else {
+                    finish();
+                }
+            }
+        });
 
+
+
+    }
+
+    private void checkUser() {
+        final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        final DocumentReference getId = FirebaseUtils.getBanco().collection("users").document(firebaseUser.getUid());
+        getId.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                if (task.isSuccessful()) {
+                    DocumentSnapshot documentSnapshot = task.getResult();
+                    if (documentSnapshot.exists()) {
+                        Log.i("tag", "User exist");
+                        finish();
+                    } else {
+                        String id = firebaseUser.getUid();
+                        User user = new User(account.getDisplayName(), id);
+                        FirebaseUtils.saveUser(user);
+                        finish();
+                    }
+
+                }
+            }
+        });
+    }
 
 
 }
