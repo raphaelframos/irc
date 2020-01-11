@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">irc</string>
+
+    <string name="descricao">Descrição</string>
+    <string name="criar">Criar</string>
+    <string name="novo_canal">Novo Canal</string>
+    <string name="nome">Nome</string>
+    <string name="disponivel">Disponível</string>
+    <string name="acessados">Acessados</string>
+    <string name="todos">Todos</string>
+    <string name="busca_canal">Busca canal</string>
+    <string name="ligados">Ligados</string>
 </resources>

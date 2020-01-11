@@ -1,46 +1,81 @@
 package com.powellapps.irc;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
+import android.content.Context;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.SearchView;
+import android.widget.Toast;
 
-import com.powellapps.irc.adapter.ChannelAdapter;
-import com.powellapps.irc.model.IrcChannel;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.android.material.tabs.TabLayout;
+import com.powellapps.irc.fragment.ChannelsFragment;
+import com.powellapps.irc.fragment.NewChannelDialogFragment;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ChannelAdapter adapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        RecyclerView recyclerViewChannels = findViewById(R.id.reciclerChannels);
-        recyclerViewChannels.setLayoutManager(new LinearLayoutManager(this));
-        recyclerViewChannels.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        adapter = new ChannelAdapter();
-        recyclerViewChannels.setAdapter(adapter);
 
-        List<IrcChannel> channels = new ArrayList<>();
-        channels.add(new IrcChannel());
-        channels.add(new IrcChannel());
-        channels.add(new IrcChannel());
-        channels.add(new IrcChannel());
-        channels.add(new IrcChannel());
-        adapter.update(channels);
-
-
+        ViewPager viewPager = findViewById(R.id.viewPager);
+        NavigationFragmentPagerAdapter adapter = new NavigationFragmentPagerAdapter(this, getSupportFragmentManager());
+        viewPager.setAdapter(adapter);
+        TabLayout tabLayout = findViewById(R.id.tabLayout_navigation);
+        tabLayout.setupWithViewPager(viewPager);
 
     }
 
 
+
+
+
+
+
+    class NavigationFragmentPagerAdapter extends FragmentStatePagerAdapter {
+
+        private final Context context;
+
+        public NavigationFragmentPagerAdapter(Context context, @NonNull FragmentManager fm) {
+            super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+            this.context = context;
+        }
+
+        @NonNull
+        @Override
+        public Fragment getItem(int position) {
+            return ChannelsFragment.newInstance(position);
+        }
+
+        @Override
+        public int getCount() {
+            return 3;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            // Generate title based on item position
+            switch (position) {
+                case 0:
+                    return context.getString(R.string.ligados);
+                case 1:
+                    return context.getString(R.string.acessados);
+                case 2:
+                    return context.getString(R.string.todos);
+
+                default:
+                    return context.getString(R.string.disponivel);
+            }
+        }
+    }
 }
