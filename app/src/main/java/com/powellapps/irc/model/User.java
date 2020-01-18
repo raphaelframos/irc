@@ -47,7 +47,7 @@ public class User {
         user.put(ConstantsUtils.ID, getId());
         user.put(ConstantsUtils.NAME, getName());
         user.put(ConstantsUtils.OFFICE, getOffice());
-        user.put(ConstantsUtils.ACCESSED, getChannels());
+        user.put(ConstantsUtils.CHANNELS, getChannels());
         return user;
     }
 

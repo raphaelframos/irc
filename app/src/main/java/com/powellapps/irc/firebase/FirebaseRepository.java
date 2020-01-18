@@ -18,6 +18,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.powellapps.irc.model.IrcChannel;
 import com.powellapps.irc.model.User;
 import com.powellapps.irc.utils.ConstantsUtils;
+import com.powellapps.irc.utils.MessageUtils;
 
 import java.util.List;
 
@@ -46,7 +47,7 @@ public class FirebaseRepository {
 
             User user = documentSnapshot.toObject(User.class);
             if(user != null) {
-                List<String> channelsIds = (List<String>) documentSnapshot.get(ConstantsUtils.ACCESSED);
+                List<String> channelsIds = (List<String>) documentSnapshot.get(ConstantsUtils.CHANNELS);
                 if(channelsIds != null) {
                     user.setChannels(channelsIds);
                     for (String channelId : user.getChannels()) {
