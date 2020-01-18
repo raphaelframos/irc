@@ -89,4 +89,10 @@ public class IrcChannel implements Serializable {
         map.put(ConstantsUtils.USERS, getUsers());
         return map;
     }
+
+    public HashMap<String, String> idMap() {
+        HashMap<String, String> map = new HashMap<>();
+        map.put(ConstantsUtils.ID, getId());
+        return map;
+    }
 }

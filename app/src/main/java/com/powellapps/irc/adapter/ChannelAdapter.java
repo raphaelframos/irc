@@ -83,6 +83,11 @@ public class ChannelAdapter extends RecyclerView.Adapter<ChannelAdapter.ViewHold
         recyclerView.scheduleLayoutAnimation();
     }
 
+    public void clean() {
+        this.channels = new ArrayList<>();
+        notifyDataSetChanged();
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder{
 
         TextView textViewChannelName;
