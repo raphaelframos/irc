@@ -9,10 +9,26 @@ import android.view.animation.LayoutAnimationController;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+<<<<<<< Updated upstream
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.powellapps.irc.R;
 import com.powellapps.irc.model.IrcChannel;
+=======
+import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.powellapps.irc.ChatActivity;
+import com.powellapps.irc.R;
+import com.powellapps.irc.model.IrcChannel;
+import com.powellapps.irc.utils.ConstantsUtils;
+import com.powellapps.irc.utils.FirebaseUtils;
+>>>>>>> Stashed changes
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +46,27 @@ public class ChannelAdapter extends RecyclerView.Adapter<ChannelAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+<<<<<<< Updated upstream
         holder.bind(channels.get(position));
+=======
+        IrcChannel channel = channels.get(position);
+        holder.bind(channel);
+        holder.itemView.setOnClickListener(v -> {
+            Intent it = new Intent(activity, ChatActivity.class);
+            it.putExtra(ConstantsUtils.ID, channel.getId());
+            activity.startActivity(it);
+        });
+
+
+
+            FirebaseUtils.getSizeChat(channel.getId()).addSnapshotListener(new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                    holder.textViewChannelUsers.setText("("+ queryDocumentSnapshots.size()+" usuários)");
+                }
+            });
+
+>>>>>>> Stashed changes
     }
 
     @Override
@@ -56,14 +92,19 @@ public class ChannelAdapter extends RecyclerView.Adapter<ChannelAdapter.ViewHold
     public class ViewHolder extends RecyclerView.ViewHolder{
 
         TextView textViewChannelName;
+        TextView textViewChannelUsers;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             textViewChannelName = itemView.findViewById(R.id.textView_channel_name);
+            textViewChannelUsers = itemView.findViewById(R.id.textView_channel_quatidade);
         }
 
         public void bind(IrcChannel ircChannel) {
             textViewChannelName.setText("#" + ircChannel.getName());
         }
+
+
+
     }
 }
