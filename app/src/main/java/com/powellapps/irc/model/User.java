@@ -49,6 +49,7 @@ public class User implements Serializable {
         user.put(ConstantsUtils.ID, getId());
         user.put(ConstantsUtils.NAME, getName());
         user.put(ConstantsUtils.OFFICE, getOffice());
+        user.put(ConstantsUtils.NICKNAME, getNickname());
         user.put(ConstantsUtils.CHANNELS, getChannels());
         return user;
     }
