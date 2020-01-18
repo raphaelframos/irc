@@ -4,6 +4,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.powellapps.irc.utils.ConstantsUtils;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -18,6 +19,10 @@ public class User implements Serializable {
 
     public User() {
     }
+
+   private List<String> channels = new ArrayList<>();
+
+
 
     public User(String name, String id) {
         this.name = name;
@@ -56,8 +61,8 @@ public class User implements Serializable {
         user.put(ConstantsUtils.ID, getId());
         user.put(ConstantsUtils.NAME, getName());
         user.put(ConstantsUtils.OFFICE, getOffice());
-        user.put(ConstantsUtils.ACCESSED, channels);
         user.put(ConstantsUtils.NICKNAME, getNickName());
+        user.put(ConstantsUtils.ACCESSED, getChannels());
         return user;
     }
 
@@ -71,7 +76,7 @@ public class User implements Serializable {
     }
 
     public String getNameChannel() {
-        return "@"+getName();
+        return "+"+getName();
     }
 
     public String getOffice() {
@@ -82,11 +87,18 @@ public class User implements Serializable {
         this.office = office;
     }
 
+
     public String getNickName() {
         return nickName;
     }
 
     public void setNickName(String nickName) {
         this.nickName = nickName;
+
+    public void add(String id) {
+        if(channels == null){
+            channels = new ArrayList<>();
+        }
+        this.channels.add(id);
     }
 }

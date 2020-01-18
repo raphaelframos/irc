@@ -2,10 +2,6 @@ package com.powellapps.irc;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.SearchView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,31 +11,26 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
+import com.powellapps.irc.firebase.FirebaseRepository;
 import com.powellapps.irc.fragment.ChannelsFragment;
-import com.powellapps.irc.fragment.NewChannelDialogFragment;
+import com.powellapps.irc.utils.FirebaseUtils;
 
 public class MainActivity extends AppCompatActivity {
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         ViewPager viewPager = findViewById(R.id.viewPager);
         NavigationFragmentPagerAdapter adapter = new NavigationFragmentPagerAdapter(this, getSupportFragmentManager());
         viewPager.setAdapter(adapter);
         TabLayout tabLayout = findViewById(R.id.tabLayout_navigation);
         tabLayout.setupWithViewPager(viewPager);
+        getSupportActionBar().setElevation(0);
 
+        FirebaseRepository.getOnChannels(FirebaseUtils.getUserId());
     }
-
-
-
-
-
 
 
     class NavigationFragmentPagerAdapter extends FragmentStatePagerAdapter {
