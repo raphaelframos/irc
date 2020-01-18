@@ -150,7 +150,6 @@ public class ChannelsFragment extends Fragment {
                     }
                     @Override
                     public boolean onQueryTextChange(String newText) {
-                        Toast.makeText(getContext(), "Teste " + newText, Toast.LENGTH_LONG).show();
                         findChannel(newText);
                         return false;
                     }

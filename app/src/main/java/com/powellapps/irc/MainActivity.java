@@ -11,7 +11,9 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
+import com.powellapps.irc.firebase.FirebaseRepository;
 import com.powellapps.irc.fragment.ChannelsFragment;
+import com.powellapps.irc.utils.FirebaseUtils;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
         getSupportActionBar().setElevation(0);
 
+        FirebaseRepository.getOnChannels(FirebaseUtils.getUserId());
     }
 
 
