@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
-    <color name="colorEnvia">#2656074B</color>
-    <color name="colorRecebe">#F7F7F7</color>
+    <color name="colorPrimary">#FFFFFF</color>
+    <color name="colorPrimaryDark">#FFFFFF</color>
+    <color name="colorAccent">#d0011b</color>
+    <color name="colorEnvia">#DDDDDD</color>
+    <color name="colorRecebe">#F5F4F4</color>
+    <color name="gray">#A7A7A7</color>
 </resources>

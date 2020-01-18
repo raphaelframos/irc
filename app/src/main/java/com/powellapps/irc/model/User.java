@@ -61,7 +61,7 @@ public class User {
     }
 
     public String getNameChannel() {
-        return "@"+getName();
+        return "+"+getName();
     }
 
     public String getOffice() {
