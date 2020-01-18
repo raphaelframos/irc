@@ -46,15 +46,12 @@
             android:layout_marginTop="3dp"
             android:elevation="2dp">
 
-            <EditText
+            <AutoCompleteTextView
                 android:id="@+id/editText_mensagem"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@android:color/white"
-                android:ems="10"
-                android:hint='"Digite algo"'
-                android:inputType="textCapWords|textCapSentences|textMultiLine" />
+                android:text="AutoCompleteTextView" />
 
         </LinearLayout>
 

@@ -54,6 +54,7 @@ public class NickNameController {
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.putString("nick",editTextlocal.getText().toString());
                             editor.commit();
+
                         } else {
                             Toast.makeText(activity, "Nick já utilizado", Toast.LENGTH_SHORT).show();
                         }
