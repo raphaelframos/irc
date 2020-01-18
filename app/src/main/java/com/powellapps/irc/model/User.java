@@ -1,5 +1,6 @@
 package com.powellapps.irc.model;
 
+import com.google.firebase.auth.FirebaseUser;
 import com.powellapps.irc.utils.ConstantsUtils;
 
 import java.util.HashMap;
@@ -9,6 +10,7 @@ public class User {
 
    private String name;
    private String id;
+   private String office;
    private List<String> channels;
 
     public User() {
@@ -17,6 +19,11 @@ public class User {
     public User(String name, String id) {
         this.name = name;
         this.id = id;
+    }
+
+    public User(FirebaseUser user) {
+        setId(user.getUid());
+        setName(user.getDisplayName());
     }
 
     public String getId() {
@@ -39,6 +46,7 @@ public class User {
         HashMap<String, Object> user = new HashMap<>();
         user.put(ConstantsUtils.ID, getId());
         user.put(ConstantsUtils.NAME, getName());
+        user.put(ConstantsUtils.OFFICE, getOffice());
         user.put(ConstantsUtils.ACCESSED, channels);
         return user;
     }
@@ -50,5 +58,17 @@ public class User {
 
     public void setChannels(List<String> channels) {
         this.channels = channels;
+    }
+
+    public String getNameChannel() {
+        return "@"+getName();
+    }
+
+    public String getOffice() {
+        return office;
+    }
+
+    public void setOffice(String office) {
+        this.office = office;
     }
 }

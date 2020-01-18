@@ -44,6 +44,7 @@ public class ChannelsFragment extends Fragment {
     private ChannelAdapter adapter;
     private ViewModelChannel viewModelChannel;
     private RecyclerView recyclerViewChannels;
+    private List<IrcChannel> channels = new ArrayList<>();
 
     public ChannelsFragment() {}
 
@@ -65,10 +66,10 @@ public class ChannelsFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        recyclerViewChannels = getView().findViewById(R.id.reciclerChannels);
+        recyclerViewChannels = getView().findViewById(R.id.recyclerView_channels);
         recyclerViewChannels.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewChannels.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
-        adapter = new ChannelAdapter();
+        adapter = new ChannelAdapter(getActivity());
         recyclerViewChannels.setAdapter(adapter);
         viewModelChannel = ViewModelProviders.of(this).get(ViewModelChannel.class);
         setHasOptionsMenu(true);
@@ -78,18 +79,22 @@ public class ChannelsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        findChannels();
+
+    }
+
+    private void findChannels() {
         int position = getArguments().getInt(ConstantsUtils.POSITION);
-        Toast.makeText(getContext(), "Posicao " + position, Toast.LENGTH_LONG).show();
         if(position == ALL){
             getAllChannels();
         }else{
             adapter.update(new ArrayList<>(), recyclerViewChannels);
         }
-
     }
 
     private void getAllChannels() {
         viewModelChannel.getChannelsAccesseds().observe(this, ircChannels -> {
+            this.channels = ircChannels;
             adapter.update(ircChannels, recyclerViewChannels);
         });
 
@@ -98,40 +103,59 @@ public class ChannelsFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main_menu, menu);
-
-        MenuItem mSearch = menu.findItem(R.id.item_search);
-        SearchView mSearchView = (SearchView) mSearch.getActionView();
+        SearchView mSearchView = (SearchView) menu.findItem(R.id.item_search).getActionView();
         mSearchView.setQueryHint(getString(R.string.busca_canal));
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
-                findChannel(query);
+            public boolean onQueryTextSubmit(String newText) {
+                findChannel(newText);
                 return false;
             }
             @Override
             public boolean onQueryTextChange(String newText) {
-
                 findChannel(newText);
-                return true;
+                return false;
             }
         });
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    private void findChannel(String newText) {
-        FirebaseUtils.findChannels(newText).addSnapshotListener((queryDocumentSnapshots, e) -> {
-            List<IrcChannel> channels = new ArrayList<>();
-            for(DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()){
-                channels.add(documentSnapshot.toObject(IrcChannel.class));
+    private void findChannel(String text) {
+        if(channels.size() > 0 && !text.isEmpty()) {
+            List<IrcChannel> channelsFound = new ArrayList<>();
+            for(IrcChannel channel : channels){
+                if(channel.contain(text)){
+                    channelsFound.add(channel);
+                }
             }
-            adapter.update(channels, recyclerViewChannels);
-        });
+            adapter.update(channelsFound, recyclerViewChannels);
+        }else if(text.isEmpty()){
+            findChannels();
+        }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()){
+
+            case R.id.item_search:
+                SearchView mSearchView = (SearchView) item.getActionView();
+                mSearchView.setQueryHint(getString(R.string.busca_canal));
+                mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                    @Override
+                    public boolean onQueryTextSubmit(String query) {
+                        findChannel(query);
+                        return false;
+                    }
+                    @Override
+                    public boolean onQueryTextChange(String newText) {
+                        Toast.makeText(getContext(), "Teste " + newText, Toast.LENGTH_LONG).show();
+                        findChannel(newText);
+                        return false;
+                    }
+                });
+                break;
 
             case R.id.item_new_channel:
                 NewChannelDialogFragment.newInstance(FirebaseUtils.getUserId()).show(getFragmentManager(), "newChannel");

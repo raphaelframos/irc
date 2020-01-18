@@ -1,20 +1,22 @@
 package com.powellapps.irc.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-<<<<<<< Updated upstream
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.powellapps.irc.ChatActivity;
 import com.powellapps.irc.R;
 import com.powellapps.irc.model.IrcChannel;
-=======
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,14 +30,19 @@ import com.powellapps.irc.R;
 import com.powellapps.irc.model.IrcChannel;
 import com.powellapps.irc.utils.ConstantsUtils;
 import com.powellapps.irc.utils.FirebaseUtils;
->>>>>>> Stashed changes
 
+import java.nio.channels.Channel;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ChannelAdapter extends RecyclerView.Adapter<ChannelAdapter.ViewHolder>{
 
+    private final FragmentActivity activity;
     private List<IrcChannel> channels = new ArrayList<>();
+
+    public ChannelAdapter(FragmentActivity activity) {
+        this.activity = activity;
+    }
 
     @NonNull
     @Override
@@ -46,9 +53,6 @@ public class ChannelAdapter extends RecyclerView.Adapter<ChannelAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-<<<<<<< Updated upstream
-        holder.bind(channels.get(position));
-=======
         IrcChannel channel = channels.get(position);
         holder.bind(channel);
         holder.itemView.setOnClickListener(v -> {
@@ -66,7 +70,7 @@ public class ChannelAdapter extends RecyclerView.Adapter<ChannelAdapter.ViewHold
                 }
             });
 
->>>>>>> Stashed changes
+
     }
 
     @Override
