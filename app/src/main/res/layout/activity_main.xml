@@ -9,7 +9,6 @@
     tools:context=".MainActivity">
 
     <androidx.viewpager.widget.ViewPager
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/viewPager"
         app:tabMode="fixed"
         android:layout_width="match_parent"
