@@ -3,11 +3,12 @@ package com.powellapps.irc.model;
 import com.google.firebase.firestore.DocumentId;
 import com.powellapps.irc.utils.ConstantsUtils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class IrcChannel {
+public class IrcChannel implements Serializable {
 
     private String name;
     private String description;
@@ -77,5 +78,15 @@ public class IrcChannel {
 
     public void add(User user) {
         this.users.add(user);
+    }
+
+    public boolean contain(User user) {
+        return getUsers().contains(user);
+    }
+
+    public HashMap<String, Object> usersMap() {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put(ConstantsUtils.USERS, getUsers());
+        return map;
     }
 }

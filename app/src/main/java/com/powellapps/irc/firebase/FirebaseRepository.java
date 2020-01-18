@@ -30,10 +30,9 @@ public class FirebaseRepository {
     private MutableLiveData<List<IrcChannel>> mutableLiveData = new MutableLiveData<>();
     private MutableLiveData<List<User>> mutableLiveDataUsers = new MutableLiveData<>();
 
-    public static void add(String id, User user) {
-        user.add(id);
-        getChannelUsers(id).document(user.getId()).set(user);
-        getUser(user.getId()).set(user);
+    public static void add(IrcChannel channel, User user) {
+        channel.add(user);
+        getChannels().document(channel.getId()).update(channel.usersMap());
     }
 
     public static DocumentReference getUser(String userId) {
@@ -93,16 +92,6 @@ public class FirebaseRepository {
             ircChannel.add(user);
             getChannels().add(ircChannel);
         });
-        /*
-        getChannels().add(ircChannel.map()).addOnSuccessListener(documentReference -> {
-            HashMap<String, Object> map = new HashMap<>();
-            ArrayList<String> channels = new ArrayList<>();
-            channels.add(documentReference.getId());
-            map.put(ConstantsUtils.CHANNELS, channels);
-            getUser(ircChannel.getCreator()).update(map);
-        });
-
-         */
     }
 
     public static CollectionReference getChannels() {
