@@ -11,4 +11,7 @@
     <string name="busca_canal">Busca canal</string>
     <string name="ligados">Ligados</string>
     <string name="sair">Sair</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

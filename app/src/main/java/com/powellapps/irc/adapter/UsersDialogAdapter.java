@@ -14,20 +14,28 @@ import com.powellapps.irc.model.User;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserChannelAdapter extends RecyclerView.Adapter<UserChannelAdapter.ViewHolder> {
+public class UsersDialogAdapter extends RecyclerView.Adapter<UsersDialogAdapter.ViewHolder>{
 
-    private List<User> users = new ArrayList<>();
+    private List<User> users;
+
+    public UsersDialogAdapter(List<User> users) {
+        this.users = users;
+    }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_users_channel, parent, false);
-        return new ViewHolder(view);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_users_dialog, parent, false);
+
+       return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.textViewName.setText(users.get(position).getNameChannel());
+
+        holder.textViewName.setText(users.get(position).getName());
+
+
     }
 
     @Override
@@ -40,7 +48,6 @@ public class UserChannelAdapter extends RecyclerView.Adapter<UserChannelAdapter.
         notifyDataSetChanged();
     }
 
-
     class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView textViewName;
@@ -48,7 +55,7 @@ public class UserChannelAdapter extends RecyclerView.Adapter<UserChannelAdapter.
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            textViewName = itemView.findViewById(R.id.textView_user_name);
+            textViewName = itemView.findViewById(R.id.textView_users_name_dialog);
         }
     }
 }

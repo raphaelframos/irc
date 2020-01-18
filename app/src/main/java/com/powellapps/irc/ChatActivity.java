@@ -7,8 +7,11 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.view.Menu;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -19,6 +22,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.powellapps.irc.adapter.ChatAdapter;
 import com.powellapps.irc.adapter.UserChannelAdapter;
 import com.powellapps.irc.firebase.FirebaseRepository;
+import com.powellapps.irc.fragment.UsersDialogFragment;
 import com.powellapps.irc.model.MensagemChat;
 import com.powellapps.irc.model.User;
 import com.powellapps.irc.utils.ConstantsUtils;
@@ -26,6 +30,7 @@ import com.powellapps.irc.utils.FirebaseUtils;
 import com.powellapps.irc.utils.MessageUtils;
 import com.powellapps.irc.viewmodel.ViewModelChannel;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -35,9 +40,12 @@ public class ChatActivity extends AppCompatActivity {
     private List<MensagemChat> messagelist;
     private ChatAdapter adapter;
     private FirebaseUser user;
-    private EditText editTextMessage;
     private Button button;
     private UserChannelAdapter usersAdapter;
+    private List<User> list = new ArrayList<>();
+    private String[] COMANDOS = new String[] {
+            "/kick", "/sussurrar", "/silenciar"
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +56,10 @@ public class ChatActivity extends AppCompatActivity {
         RecyclerView recyclerViewUsers = findViewById(R.id.recyclerView_users);
 
         button = findViewById(R.id.button);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, COMANDOS);
+        AutoCompleteTextView editTextMessage = findViewById(R.id.editText_mensagem);
 
-        editTextMessage = findViewById(R.id.editText_mensagem);
+        editTextMessage.setAdapter(arrayAdapter);
 
         messagelist = new ArrayList<>();
         adapter = new ChatAdapter(messagelist);
@@ -90,11 +100,16 @@ public class ChatActivity extends AppCompatActivity {
 
         ViewModelProviders.of(this).get(ViewModelChannel.class).getUsersInChannel(id).observe(this, users -> {
             usersAdapter.update(users);
+            list = users;
         });
 
 
         button.setOnClickListener(v -> {
             String message = editTextMessage.getText().toString();
+
+            if(message.equals("/kick")) {
+                UsersDialogFragment.newInstance().setList(list).show(getSupportFragmentManager(), "users");
+            }
 
             try{
                     MensagemChat mensagemChat = new MensagemChat();
