@@ -12,6 +12,8 @@ import com.powellapps.irc.R;
 import com.powellapps.irc.model.MensagemChat;
 import com.powellapps.irc.utils.FirebaseUtils;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 
@@ -82,9 +84,16 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         }
 
         public void set(MensagemChat mensagemChat) {
-            textViewDate.setText(mensagemChat.getCreationDate().toString());
+
+
+            textViewDate.setText(getData(mensagemChat.getCreationDate()));
             textViewName.setText(mensagemChat.getNameUser());
             textViewMessage.setText(mensagemChat.getText());
         }
+    }
+
+    public static String getData(Long calendar) {
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yy HH:mm");
+        return format.format(calendar);
     }
 }
