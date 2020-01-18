@@ -13,4 +13,5 @@ public class ConstantsUtils {
 
     public static final String CREATION_DATE = "creationDate";
     public static final String OFFICE = "office";
+    public static final String NICKNAME = "nickname";
 }
