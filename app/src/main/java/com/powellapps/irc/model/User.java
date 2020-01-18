@@ -10,29 +10,17 @@ import java.util.List;
 
 public class User implements Serializable {
 
-   private String name;
-   private String id;
-   private String office;
-   private String nickName;
-   private List<String> channels;
+    private String name;
+    private String id;
+    private String office;
+    private List<String> channels = new ArrayList<>();
+    private String nickname;
 
-
-    public User() {
-    }
-
-   private List<String> channels = new ArrayList<>();
-
-
+    public User() {}
 
     public User(String name, String id) {
         this.name = name;
         this.id = id;
-    }
-
-    public User(String name, String id, String nickName) {
-        this.name = name;
-        this.id = id;
-        this.nickName = nickName;
     }
 
     public User(FirebaseUser user) {
@@ -61,8 +49,8 @@ public class User implements Serializable {
         user.put(ConstantsUtils.ID, getId());
         user.put(ConstantsUtils.NAME, getName());
         user.put(ConstantsUtils.OFFICE, getOffice());
-        user.put(ConstantsUtils.NICKNAME, getNickName());
-        user.put(ConstantsUtils.ACCESSED, getChannels());
+        user.put(ConstantsUtils.NICKNAME, getNickname());
+        user.put(ConstantsUtils.CHANNELS, getChannels());
         return user;
     }
 
@@ -85,20 +73,23 @@ public class User implements Serializable {
 
     public void setOffice(String office) {
         this.office = office;
-    }
-
-
-    public String getNickName() {
-        return nickName;
-    }
-
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
+}
 
     public void add(String id) {
         if(channels == null){
             channels = new ArrayList<>();
         }
-        this.channels.add(id);
+        if(!channels.contains(id)) {
+            this.channels.add(id);
+        }
     }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
 }
