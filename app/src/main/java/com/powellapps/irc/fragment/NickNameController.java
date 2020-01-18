@@ -37,10 +37,10 @@ public class NickNameController {
         container.addView(editTextlocal, lp);
         alerta.setView(container);
 
-        alerta.setTitle("ATENÇÃO!:").setMessage("é preciso definir um apelido").setPositiveButton("Salvar", new DialogInterface.OnClickListener() {
+        alerta.setTitle("ATENÇÃO!:").setMessage("É preciso definir um apelido").setPositiveButton("Salvar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                user.setNickName(editTextlocal.getText().toString());
+                user.setNickname(editTextlocal.getText().toString());
                 FirebaseUtils.saveUser(user);
                 SharedPreferences sharedPreferences = activity.getSharedPreferences("NICKNAMES", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
