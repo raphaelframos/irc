@@ -3,7 +3,9 @@ package com.powellapps.irc.model;
 import com.google.firebase.firestore.DocumentId;
 import com.powellapps.irc.utils.ConstantsUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class IrcChannel {
 
@@ -12,6 +14,7 @@ public class IrcChannel {
     private String creator;
     @DocumentId
     private String id;
+    private List<User> users = new ArrayList<>();
 
     public IrcChannel(){}
 
@@ -48,6 +51,7 @@ public class IrcChannel {
         map.put(ConstantsUtils.NAME, getName());
         map.put(ConstantsUtils.DESCRIPTION, getDescription());
         map.put(ConstantsUtils.CREATOR, getCreator());
+        map.put(ConstantsUtils.USERS, getUsers());
         return map;
     }
 
@@ -61,5 +65,17 @@ public class IrcChannel {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
+    }
+
+    public void add(User user) {
+        this.users.add(user);
     }
 }

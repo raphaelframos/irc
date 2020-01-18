@@ -60,17 +60,7 @@ public class ChannelAdapter extends RecyclerView.Adapter<ChannelAdapter.ViewHold
             it.putExtra(ConstantsUtils.ID, channel.getId());
             activity.startActivity(it);
         });
-
-
-
-            FirebaseUtils.getSizeChat(channel.getId()).addSnapshotListener(new EventListener<QuerySnapshot>() {
-                @Override
-                public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                    holder.textViewChannelUsers.setText("("+ queryDocumentSnapshots.size()+" usuários)");
-                }
-            });
-
-
+        
     }
 
     @Override
@@ -106,6 +96,7 @@ public class ChannelAdapter extends RecyclerView.Adapter<ChannelAdapter.ViewHold
 
         public void bind(IrcChannel ircChannel) {
             textViewChannelName.setText("#" + ircChannel.getName());
+            textViewChannelUsers.setText("("+ ircChannel.getUsers().size()+" usuários)");
         }
 
 

@@ -41,11 +41,9 @@ public class NickNameController {
         container.addView(editTextlocal, lp);
         alerta.setView(container);
 
-        alerta.setTitle("ATENÇÃO!:").setMessage("é preciso definir um apelido").setPositiveButton("Salvar", new DialogInterface.OnClickListener() {
+        alerta.setTitle("ATENÇÃO!:").setMessage("É preciso definir um apelido").setPositiveButton("Salvar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                user.setNickname(editTextlocal.getText().toString());
-
                 FirebaseUtils.getBanco().collection(ConstantsUtils.USERS).whereEqualTo("nickname", editTextlocal.getText().toString()).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -62,7 +60,7 @@ public class NickNameController {
                     }
                 });
 
-
+            
             }
         }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
             @Override
