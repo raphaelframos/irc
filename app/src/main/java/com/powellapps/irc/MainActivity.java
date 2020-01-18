@@ -29,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
         getSupportActionBar().setElevation(0);
 
-        FirebaseRepository.getOnChannels(FirebaseUtils.getUserId());
     }
 
 

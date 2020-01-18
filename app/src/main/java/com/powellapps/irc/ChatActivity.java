@@ -2,16 +2,13 @@ package com.powellapps.irc;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -19,8 +16,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.powellapps.irc.adapter.ChatAdapter;
 import com.powellapps.irc.adapter.UserChannelAdapter;
 import com.powellapps.irc.firebase.FirebaseRepository;
@@ -28,6 +23,7 @@ import com.powellapps.irc.model.MensagemChat;
 import com.powellapps.irc.model.User;
 import com.powellapps.irc.utils.ConstantsUtils;
 import com.powellapps.irc.utils.FirebaseUtils;
+import com.powellapps.irc.utils.MessageUtils;
 import com.powellapps.irc.viewmodel.ViewModelChannel;
 
 import java.util.ArrayList;
@@ -47,7 +43,7 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-        user = FirebaseUtils.getUser();
+        user = FirebaseUtils.getFirebaseUser();
         RecyclerView recyclerViewChat = findViewById(R.id.recyclerView_chat);
         RecyclerView recyclerViewUsers = findViewById(R.id.recyclerView_users);
 
@@ -74,7 +70,10 @@ public class ChatActivity extends AppCompatActivity {
 
         String id = getIntent().getStringExtra(ConstantsUtils.ID);
 
-        FirebaseRepository.add(id, new User(FirebaseUtils.getUser()));
+       FirebaseRepository.getUser(FirebaseUtils.getUserId()).addSnapshotListener((documentSnapshot, e) -> {
+            FirebaseRepository.add(id, documentSnapshot.toObject(User.class));
+        });
+
 
         FirebaseRepository.getChat(id).orderBy(ConstantsUtils.CREATION_DATE).addSnapshotListener((queryDocumentSnapshots, e) -> {
                 messagelist.clear();

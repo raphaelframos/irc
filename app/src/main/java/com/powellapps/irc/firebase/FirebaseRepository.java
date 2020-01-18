@@ -15,11 +15,14 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.gson.Gson;
 import com.powellapps.irc.model.IrcChannel;
 import com.powellapps.irc.model.User;
 import com.powellapps.irc.utils.ConstantsUtils;
 import com.powellapps.irc.utils.MessageUtils;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class FirebaseRepository {
@@ -29,11 +32,11 @@ public class FirebaseRepository {
 
     public static void add(String id, User user) {
         user.add(id);
-        getChannelUsers(id).document(user.getId()).set(user.returnUser());
-        getUser(user.getId()).set(user.returnUser());
+        getChannelUsers(id).document(user.getId()).set(user);
+        getUser(user.getId()).set(user);
     }
 
-    private static DocumentReference getUser(String userId) {
+    public static DocumentReference getUser(String userId) {
         return getDB().collection(ConstantsUtils.USERS).document(userId);
     }
 
@@ -85,7 +88,21 @@ public class FirebaseRepository {
     }
 
     public static void save(IrcChannel ircChannel) {
-        getChannels().add(ircChannel.map());
+        getUser(ircChannel.getCreator()).addSnapshotListener( (documentSnapshot, e) -> {
+            User user = documentSnapshot.toObject(User.class);
+            ircChannel.add(user);
+            getChannels().add(ircChannel);
+        });
+        /*
+        getChannels().add(ircChannel.map()).addOnSuccessListener(documentReference -> {
+            HashMap<String, Object> map = new HashMap<>();
+            ArrayList<String> channels = new ArrayList<>();
+            channels.add(documentReference.getId());
+            map.put(ConstantsUtils.CHANNELS, channels);
+            getUser(ircChannel.getCreator()).update(map);
+        });
+
+         */
     }
 
     public static CollectionReference getChannels() {

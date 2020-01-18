@@ -26,11 +26,7 @@ public class FirebaseUtils extends AppCompatActivity {
         return FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
 
-    public static String getIdUser() {
-        return FirebaseAuth.getInstance().getCurrentUser().getUid();
-    }
-
-    public static FirebaseUser getUser() {
+    public static FirebaseUser getFirebaseUser() {
         return FirebaseAuth.getInstance().getCurrentUser();
     }
 
@@ -48,6 +44,6 @@ public class FirebaseUtils extends AppCompatActivity {
     }
 
     public static boolean isUser() {
-        return getUser() != null && !getUserId().isEmpty();
+        return getFirebaseUser() != null && !getUserId().isEmpty();
     }
 }

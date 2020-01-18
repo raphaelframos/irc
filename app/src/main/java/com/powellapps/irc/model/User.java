@@ -72,13 +72,15 @@ public class User implements Serializable {
 
     public void setOffice(String office) {
         this.office = office;
-    }
+}
 
     public void add(String id) {
         if(channels == null){
             channels = new ArrayList<>();
         }
-        this.channels.add(id);
+        if(!channels.contains(id)) {
+            this.channels.add(id);
+        }
     }
 
     public String getNickname() {
@@ -88,4 +90,5 @@ public class User implements Serializable {
     public void setNickname(String nickname) {
         this.nickname = nickname;
     }
+
 }
