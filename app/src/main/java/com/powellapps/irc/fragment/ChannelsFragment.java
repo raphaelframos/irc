@@ -163,4 +163,5 @@ public class ChannelsFragment extends Fragment {
         }
         return super.onOptionsItemSelected(item);
     }
+
 }

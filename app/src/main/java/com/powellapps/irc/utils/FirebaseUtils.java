@@ -43,6 +43,10 @@ public class FirebaseUtils extends AppCompatActivity {
         return query;
     }
 
+    public static CollectionReference getSizeChat(String id) {
+        return FirebaseFirestore.getInstance().collection(ConstantsUtils.CHANNELS).document(id).collection(ConstantsUtils.USERS);
+    }
+
     public static boolean isUser() {
         return getUser() != null && !getUserId().isEmpty();
     }
