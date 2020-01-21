@@ -1,28 +1,17 @@
 package com.powellapps.irc.firebase;
 
 
-import android.util.Log;
-
-import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.gson.Gson;
 import com.powellapps.irc.model.IrcChannel;
 import com.powellapps.irc.model.User;
 import com.powellapps.irc.utils.ConstantsUtils;
-import com.powellapps.irc.utils.MessageUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class FirebaseRepository {
@@ -107,6 +96,10 @@ public class FirebaseRepository {
 
     public static CollectionReference getChannels() {
         return getDB().collection(ConstantsUtils.CHANNELS);
+    }
+
+    public static void banUserforChannel(String id, User user) {
+        getChannels().document(id).collection(ConstantsUtils.BANNED).document(user.getId()).set(user);
     }
 
 

@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import com.powellapps.irc.R;
 import com.powellapps.irc.adapter.ChannelAdapter;
 import com.powellapps.irc.adapter.UsersDialogAdapter;
+import com.powellapps.irc.model.IrcChannel;
 import com.powellapps.irc.model.User;
 import com.powellapps.irc.viewmodel.ViewModelChannel;
 
@@ -30,6 +31,7 @@ public class UsersDialogFragment extends DialogFragment {
     private UsersDialogAdapter adapter;
     private ViewModelChannel viewModelChannel;
     private List<User> userList;
+    private String channelId;
 
 
     public static UsersDialogFragment newInstance() {
@@ -48,7 +50,7 @@ public class UsersDialogFragment extends DialogFragment {
         recyclerViewUsersDialog.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewUsersDialog.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
 
-        adapter = new UsersDialogAdapter(userList);
+        adapter = new UsersDialogAdapter(userList, channelId);
         recyclerViewUsersDialog.setAdapter(adapter);
         setHasOptionsMenu(true);
 
@@ -61,6 +63,11 @@ public class UsersDialogFragment extends DialogFragment {
     public UsersDialogFragment setList(List<User> userList) {
       this.userList = userList;
       return this;
+    }
+
+    public UsersDialogFragment setChannelId(String channelId) {
+        this.channelId = channelId;
+        return this;
     }
 
 }

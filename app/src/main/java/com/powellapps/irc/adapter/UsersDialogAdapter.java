@@ -1,5 +1,6 @@
 package com.powellapps.irc.adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,8 +9,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.powellapps.irc.ChatActivity;
 import com.powellapps.irc.R;
+import com.powellapps.irc.firebase.FirebaseRepository;
+import com.powellapps.irc.model.IrcChannel;
 import com.powellapps.irc.model.User;
+import com.powellapps.irc.utils.FirebaseUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,8 +23,12 @@ public class UsersDialogAdapter extends RecyclerView.Adapter<UsersDialogAdapter.
 
     private List<User> users;
 
-    public UsersDialogAdapter(List<User> users) {
+    private String channelId;
+
+
+    public UsersDialogAdapter(List<User> users, String channelId) {
         this.users = users;
+        this.channelId = channelId;
     }
 
     @NonNull
@@ -33,8 +42,15 @@ public class UsersDialogAdapter extends RecyclerView.Adapter<UsersDialogAdapter.
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        holder.textViewName.setText(users.get(position).getName());
+        User user = users.get(position);
 
+        holder.textViewName.setText(user.getName());
+
+      holder.itemView.setOnClickListener((View v) -> {
+
+          FirebaseRepository.banUserforChannel(channelId,user);
+
+        });
 
     }
 
@@ -43,10 +59,6 @@ public class UsersDialogAdapter extends RecyclerView.Adapter<UsersDialogAdapter.
         return users.size();
     }
 
-    public void update(List<User> users) {
-        this.users = users;
-        notifyDataSetChanged();
-    }
 
     class ViewHolder extends RecyclerView.ViewHolder {
 

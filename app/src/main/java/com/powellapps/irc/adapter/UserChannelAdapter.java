@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.powellapps.irc.R;
+import com.powellapps.irc.model.IrcChannel;
 import com.powellapps.irc.model.User;
 
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import java.util.List;
 public class UserChannelAdapter extends RecyclerView.Adapter<UserChannelAdapter.ViewHolder> {
 
     private List<User> users = new ArrayList<>();
+
 
     @NonNull
     @Override
