@@ -55,6 +55,7 @@ public class ChatActivity extends AppCompatActivity {
         RecyclerView recyclerViewChat = findViewById(R.id.recyclerView_chat);
         RecyclerView recyclerViewUsers = findViewById(R.id.recyclerView_users);
 
+
         button = findViewById(R.id.button);
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, COMANDOS);
         AutoCompleteTextView editTextMessage = findViewById(R.id.editText_mensagem);
@@ -108,7 +109,10 @@ public class ChatActivity extends AppCompatActivity {
             String message = editTextMessage.getText().toString();
 
             if(message.equals("/kick")) {
-                UsersDialogFragment.newInstance().setList(list).show(getSupportFragmentManager(), "users");
+                UsersDialogFragment.newInstance().setList(list).setChannelId(id).show(getSupportFragmentManager(), "users");
+            } else if (message.equals("/sussurrar")) {
+
+
             }
 
             try{
@@ -133,4 +137,9 @@ public class ChatActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.chat_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
+
+
+
+
+
 }

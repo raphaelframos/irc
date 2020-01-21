@@ -43,6 +43,7 @@ public class FirebaseUtils extends AppCompatActivity {
         return FirebaseFirestore.getInstance().collection(ConstantsUtils.CHANNELS).document(id).collection(ConstantsUtils.USERS);
     }
 
+
     public static boolean isUser() {
         return getFirebaseUser() != null && !getUserId().isEmpty();
     }
