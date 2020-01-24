@@ -30,6 +30,7 @@ public class FirebaseRepository {
 
     private MutableLiveData<List<IrcChannel>> mutableLiveData = new MutableLiveData<>();
     private MutableLiveData<List<String>> mutableOnChannelIdsLiveData = new MutableLiveData<>();
+    private MutableLiveData<List<String>> visitedIdsLiveData = new MutableLiveData<>();
     private MutableLiveData<IrcChannel> mutableOnChannelLiveData = new MutableLiveData<>();
     private MutableLiveData<List<User>> mutableLiveDataUsers = new MutableLiveData<>();
     private MutableLiveData<List<IrcChannel>> accessedChannels = new MutableLiveData<>();
@@ -93,6 +94,22 @@ public class FirebaseRepository {
 
         return mutableOnChannelIdsLiveData;
     }
+    public LiveData<List<String>> getMutableLiveDataVisitedChannelIds(String userId) {
+
+        List<String> channels = new ArrayList<>();
+
+        getDB().collection("channelList").document(userId).collection("visited").addSnapshotListener((queryDocumentSnapshots, e) -> {
+            for(DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()){
+                if(documentSnapshot != null && documentSnapshot.get("id") != null){
+                    channels.add((String) documentSnapshot.get("id"));
+                }
+            }
+            visitedIdsLiveData.setValue(channels);
+        });
+
+        return visitedIdsLiveData;
+    }
+
 
     private static CollectionReference getChannelUsers(String id) {
         return getChannels().document(id).collection(ConstantsUtils.USERS);

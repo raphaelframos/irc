@@ -38,6 +38,7 @@ public class ChannelsFragment extends Fragment {
 
     private static final int ALL = 2;
     private static final int ON = 0;
+    private static final int VISITED = 1;
     private ChannelAdapter adapter;
     private ViewModelChannel viewModelChannel;
     private RecyclerView recyclerViewChannels;
@@ -84,12 +85,22 @@ public class ChannelsFragment extends Fragment {
 
         if(position == ON){
             getOnChannels();
-        }
+        }else if(position == VISITED){
+            getVisited();
+        }else
         if(position == ALL){
             getAllChannels();
         }else{
             adapter.update(new ArrayList<>(), recyclerViewChannels);
         }
+    }
+
+    private void getVisited() {
+        viewModelChannel.getVisitedChannels(FirebaseUtils.getUserId()).observe(this, ids ->{
+            viewModelChannel.getAccessedChannels(ids).observe(this, channels -> {
+                adapter.update(channels, recyclerViewChannels);
+            });
+        });
     }
 
     private void getOnChannels() {
