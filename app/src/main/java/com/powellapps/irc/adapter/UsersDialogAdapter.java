@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.powellapps.irc.ChatActivity;
@@ -24,11 +25,13 @@ public class UsersDialogAdapter extends RecyclerView.Adapter<UsersDialogAdapter.
     private List<User> users;
 
     private String channelId;
+    private DialogFragment dialogFragment;
 
 
-    public UsersDialogAdapter(List<User> users, String channelId) {
+    public UsersDialogAdapter(List<User> users, String channelId, DialogFragment dialogFragment) {
         this.users = users;
         this.channelId = channelId;
+        this.dialogFragment = dialogFragment;
     }
 
     @NonNull
@@ -49,6 +52,8 @@ public class UsersDialogAdapter extends RecyclerView.Adapter<UsersDialogAdapter.
       holder.itemView.setOnClickListener((View v) -> {
 
           FirebaseRepository.banUserforChannel(channelId,user);
+          dialogFragment.dismiss();
+
 
         });
 

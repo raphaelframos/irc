@@ -106,6 +106,7 @@ public class ChatActivity extends AppCompatActivity {
 
 
         button.setOnClickListener(v -> {
+
             String message = editTextMessage.getText().toString();
 
             if(message.equals("/kick")) {

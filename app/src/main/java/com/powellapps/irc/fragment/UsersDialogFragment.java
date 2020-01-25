@@ -50,9 +50,11 @@ public class UsersDialogFragment extends DialogFragment {
         recyclerViewUsersDialog.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewUsersDialog.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
 
-        adapter = new UsersDialogAdapter(userList, channelId);
+        adapter = new UsersDialogAdapter(userList, channelId,this);
         recyclerViewUsersDialog.setAdapter(adapter);
         setHasOptionsMenu(true);
+
+
 
 
 

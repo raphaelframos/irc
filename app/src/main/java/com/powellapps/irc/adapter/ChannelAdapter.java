@@ -14,8 +14,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.powellapps.irc.ChatActivity;
 import com.powellapps.irc.R;
+import com.powellapps.irc.firebase.FirebaseRepository;
 import com.powellapps.irc.model.IrcChannel;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
@@ -28,8 +32,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.powellapps.irc.ChatActivity;
 import com.powellapps.irc.R;
 import com.powellapps.irc.model.IrcChannel;
+import com.powellapps.irc.model.User;
 import com.powellapps.irc.utils.ConstantsUtils;
 import com.powellapps.irc.utils.FirebaseUtils;
+import com.powellapps.irc.utils.RandomUtils;
 
 import java.nio.channels.Channel;
 import java.util.ArrayList;
@@ -48,6 +54,8 @@ public class ChannelAdapter extends RecyclerView.Adapter<ChannelAdapter.ViewHold
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_channel, parent, false);
+
+        Log.d("idusuario", FirebaseUtils.getUserId());
         return new ViewHolder(view);
     }
 
@@ -56,9 +64,19 @@ public class ChannelAdapter extends RecyclerView.Adapter<ChannelAdapter.ViewHold
         IrcChannel channel = channels.get(position);
         holder.bind(channel);
         holder.itemView.setOnClickListener(v -> {
-            Intent it = new Intent(activity, ChatActivity.class);
-            it.putExtra(ConstantsUtils.ID, channel.getId());
-            activity.startActivity(it);
+            FirebaseRepository.getUsersBan(channel.getId()).whereEqualTo("id", FirebaseUtils.getUserId()).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                @Override
+                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        RandomUtils.mostraAlerta("Usuario Banido!", "Você foi banido desse canal", activity);
+                    } else  {
+                        Intent it = new Intent(activity, ChatActivity.class);
+                        it.putExtra(ConstantsUtils.ID, channel.getId());
+                        activity.startActivity(it);
+                    }
+                }
+            });
+
         });
         
     }
