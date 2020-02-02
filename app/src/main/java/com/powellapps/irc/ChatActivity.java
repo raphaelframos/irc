@@ -1,21 +1,19 @@
 package com.powellapps.irc;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.powellapps.irc.adapter.ChatAdapter;
 import com.powellapps.irc.adapter.UserChannelAdapter;
@@ -26,7 +24,6 @@ import com.powellapps.irc.model.MensagemChat;
 import com.powellapps.irc.model.User;
 import com.powellapps.irc.utils.ConstantsUtils;
 import com.powellapps.irc.utils.FirebaseUtils;
-import com.powellapps.irc.viewmodel.ViewModelChannel;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -37,16 +34,14 @@ public class ChatActivity extends AppCompatActivity {
     private List<MensagemChat> messagelist;
     private ChatAdapter adapter;
     private User user;
-    private Button button;
+    private FloatingActionButton button;
     private UserChannelAdapter usersAdapter;
-    private List<User> list = new ArrayList<>();
     private User usuario;
     private String[] COMANDOS = new String[] {
             "/kick", "/quit"
     };
     private AutoCompleteTextView editTextMessage;
     private IrcChannel channel;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +51,7 @@ public class ChatActivity extends AppCompatActivity {
         RecyclerView recyclerViewUsers = findViewById(R.id.recyclerView_users);
 
 
-        button = findViewById(R.id.button);
+        button = findViewById(R.id.fab_send);
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, COMANDOS);
         editTextMessage = findViewById(R.id.editText_mensagem);
 
@@ -93,7 +88,6 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 usuario = documentSnapshot.toObject(User.class);
-                Log.d("nome", usuario.getName());
             }
         });
 
@@ -117,11 +111,14 @@ public class ChatActivity extends AppCompatActivity {
 
             switch (message) {
                 case "/kick":
-                    UsersDialogFragment.newInstance().setList(list).setUser(usuario).setChannelId(channel.getId()).setCodeComando(1).show(getSupportFragmentManager(), "users");
+                    UsersDialogFragment.newInstance().setList(channel.getUsers()).setUser(usuario).setCodeComando(1).show(getSupportFragmentManager(), "users");
                     break;
                 case "/quit":
-                    UsersDialogFragment.newInstance().setList(list).setUser(usuario).setChannelId(channel.getId()).setCodeComando(2).show(getSupportFragmentManager(), "users");
+                    UsersDialogFragment.newInstance().setList(channel.getUsers()).setUser(usuario).setCodeComando(2).show(getSupportFragmentManager(), "users");
                     break;
+
+                    default:
+                        save(message);
             }
 
         });

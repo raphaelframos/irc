@@ -51,9 +51,9 @@ public class UsersDialogFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         View view = inflater.inflate(R.layout.fragment_users_dialog, container, false);
-        Toolbar myToolbar = (Toolbar) view.findViewById(R.id.toolbar_users_dialog);
+        Toolbar myToolbar = view.findViewById(R.id.toolbar_users_dialog);
 
         myToolbar.setTitle("Escolha o usuario!");
 
@@ -61,10 +61,9 @@ public class UsersDialogFragment extends DialogFragment {
         recyclerViewUsersDialog.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewUsersDialog.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
 
-        adapter = new UsersDialogAdapter(listaNova, channelId, this, codigo);
+        userList.remove(user);
+        adapter = new UsersDialogAdapter(userList, channelId, this, codigo);
         recyclerViewUsersDialog.setAdapter(adapter);
-
-
 
         setHasOptionsMenu(true);
 

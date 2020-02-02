@@ -21,7 +21,7 @@ import com.powellapps.irc.model.User;
 import com.powellapps.irc.utils.ConstantsUtils;
 import com.powellapps.irc.utils.FirebaseUtils;
 
-public class NickNameController {
+public class NicknameController {
 
     public static void alertaDeNickName (final FragmentActivity activity, final User user) {
         final AlertDialog.Builder alerta = new AlertDialog.Builder(activity);

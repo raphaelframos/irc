@@ -1,7 +1,6 @@
 package com.powellapps.irc;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
 
 import android.content.Intent;
@@ -20,7 +19,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.powellapps.irc.fragment.NickNameController;
+import com.powellapps.irc.fragment.NicknameController;
 import com.powellapps.irc.model.User;
 import com.powellapps.irc.utils.FirebaseUtils;
 
@@ -113,7 +112,7 @@ public class LoginActivity extends FragmentActivity {
                 if (!documentSnapshot.exists()) {
                     String id = firebaseUser.getUid();
                     User user = new User(account.getDisplayName(), id);
-                    NickNameController.alertaDeNickName(LoginActivity.this, user);
+                    NicknameController.alertaDeNickName(LoginActivity.this, user);
 
                 }
 
