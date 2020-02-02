@@ -38,8 +38,15 @@ public class FirebaseRepository {
     public static void add(IrcChannel channel, User user) {
         user.setOffice(Category.USER.getName());
         channel.add(user);
+        updateUsers(channel);
+    }
+    public static void remove(IrcChannel channel) {
+        updateUsers(channel);
+    }
+
+
+    private static void updateUsers(IrcChannel channel) {
         getChannels().document(channel.getId()).update(channel.usersMap());
-        setChannelLists(channel, user);
     }
 
     private static void setChannelLists(IrcChannel channel, User user) {

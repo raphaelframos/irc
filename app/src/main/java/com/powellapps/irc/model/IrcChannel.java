@@ -104,4 +104,8 @@ public class IrcChannel implements Serializable {
     public void setActive(boolean active) {
         this.active = active;
     }
+
+    public void remove(User user) {
+        this.users.remove(user);
+    }
 }

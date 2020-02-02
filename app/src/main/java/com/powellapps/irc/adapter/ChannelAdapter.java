@@ -54,7 +54,6 @@ public class ChannelAdapter extends RecyclerView.Adapter<ChannelAdapter.ViewHold
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_channel, parent, false);
 
-        Log.d("idusuario", FirebaseUtils.getUserId());
         return new ViewHolder(view);
     }
 

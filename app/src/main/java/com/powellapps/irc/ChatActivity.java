@@ -3,6 +3,7 @@ package com.powellapps.irc;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -74,6 +75,7 @@ public class ChatActivity extends AppCompatActivity {
         usersAdapter = new UserChannelAdapter();
         recyclerViewUsers.setAdapter(usersAdapter);
         channel = (IrcChannel) getIntent().getSerializableExtra(ConstantsUtils.CHANNEL);
+        getSupportActionBar().setTitle(channel.getName());
         usersAdapter.update(channel.getUsers());
         FirebaseRepository.getUser(FirebaseUtils.getUserId()).addSnapshotListener((documentSnapshot, e) -> {
             user = documentSnapshot.toObject(User.class);
@@ -145,7 +147,16 @@ public class ChatActivity extends AppCompatActivity {
             return super.onCreateOptionsMenu(menu);
         }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
 
-
-
+        switch (item.getItemId()){
+            case R.id.item_exit:
+                channel.remove(user);
+                FirebaseRepository.remove(channel);
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }
