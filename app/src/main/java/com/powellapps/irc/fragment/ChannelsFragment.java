@@ -19,10 +19,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
 
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.powellapps.irc.R;
 import com.powellapps.irc.adapter.ChannelAdapter;
 import com.powellapps.irc.firebase.FirebaseRepository;
 import com.powellapps.irc.model.IrcChannel;
+import com.powellapps.irc.model.User;
 import com.powellapps.irc.utils.ConstantsUtils;
 import com.powellapps.irc.utils.FirebaseUtils;
 import com.powellapps.irc.utils.MessageUtils;
@@ -72,25 +76,12 @@ public class ChannelsFragment extends Fragment {
         viewModelChannel = ViewModelProviders.of(this).get(ViewModelChannel.class);
         setHasOptionsMenu(true);
         String id = getArguments().getString(ConstantsUtils.ID);
-        findOnChannels(id);
-    }
-
-
-    private void getVisited() {
-        viewModelChannel.getVisitedChannels(FirebaseUtils.getUserId()).observe(this, ids ->{
-            viewModelChannel.getAccessedChannels(ids).observe(this, channels -> {
-                adapter.update(channels, recyclerViewChannels);
-            });
+        FirebaseRepository.getUser(id).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                findOnChannels(documentSnapshot.toObject(User.class));
+            }
         });
-    }
-
-    private void getOnChannels() {
-        viewModelChannel.getOnChannelsIds(FirebaseUtils.getUserId()).observe(this, ids ->{
-            viewModelChannel.getAccessedChannels(ids).observe(this, channels -> {
-                adapter.update(channels, recyclerViewChannels);
-            });
-        });
-
 
     }
 
@@ -165,8 +156,17 @@ public class ChannelsFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    public void findOnChannels(String userId) {
-        adapter.update(new ArrayList<>(), recyclerViewChannels);
+    public void findOnChannels(User userId) {
+        getOnChannels(userId);
+    }
+
+    private void getOnChannels(User userId) {
+        viewModelChannel.getOnChannels(userId).observe(this, channels ->{
+            this.channels = channels;
+            adapter.update(channels, recyclerViewChannels);
+        });
+
+
     }
 
     public void findChannels() {

@@ -26,23 +26,8 @@ public class ViewModelChannel extends AndroidViewModel {
         return firebaseRepository.getMutableLiveData();
     }
 
-    public LiveData<List<User>> getUsersInChannel(String id) {
-        return firebaseRepository.getMutableLiveDataUsersInChannel(id);
-    }
-
-    public LiveData<List<String>> getOnChannelsIds(String userId) {
-        return firebaseRepository.getMutableLiveDataOnChannelIds(userId);
-    }
-
-    public LiveData<IrcChannel> getOnChannel(String id) {
-        return firebaseRepository.getMutableLiveDataOnChannel(id);
-    }
-
-    public LiveData<List<IrcChannel>> getAccessedChannels(List<String> ids) {
-        return firebaseRepository.getAccessedChannels(ids);
-    }
-    public LiveData<List<String>> getVisitedChannels(String userId) {
-        return firebaseRepository.getMutableLiveDataVisitedChannelIds(userId);
+    public LiveData<List<IrcChannel>> getOnChannels(User userId) {
+        return firebaseRepository.getOnChannels(userId);
     }
 
 }
