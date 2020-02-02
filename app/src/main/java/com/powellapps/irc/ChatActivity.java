@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -43,6 +44,8 @@ public class ChatActivity extends AppCompatActivity {
     private String[] COMANDOS = new String[] {
             "/kick", "/quit"
     };
+    private AutoCompleteTextView editTextMessage;
+    private IrcChannel channel;
 
 
     @Override
@@ -56,7 +59,7 @@ public class ChatActivity extends AppCompatActivity {
 
         button = findViewById(R.id.button);
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, COMANDOS);
-        AutoCompleteTextView editTextMessage = findViewById(R.id.editText_mensagem);
+        editTextMessage = findViewById(R.id.editText_mensagem);
 
         editTextMessage.setAdapter(arrayAdapter);
 
@@ -77,34 +80,34 @@ public class ChatActivity extends AppCompatActivity {
         usersAdapter = new UserChannelAdapter();
         recyclerViewUsers.setAdapter(usersAdapter);
 
-        IrcChannel channel = (IrcChannel) getIntent().getSerializableExtra(ConstantsUtils.CHANNEL);
+        channel = (IrcChannel) getIntent().getSerializableExtra(ConstantsUtils.CHANNEL);
         FirebaseRepository.getUser(FirebaseUtils.getUserId()).addSnapshotListener((documentSnapshot, e) -> {
             User user = documentSnapshot.toObject(User.class);
 
-            if(!channel.contain(user)){
+            if (!channel.contain(user)) {
                 FirebaseRepository.add(channel, user);
             }
 
         });
 
-       FirebaseRepository.getUser(FirebaseUtils.getUserId()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-           @Override
-           public void onSuccess(DocumentSnapshot documentSnapshot) {
+        FirebaseRepository.getUser(FirebaseUtils.getUserId()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
                 usuario = documentSnapshot.toObject(User.class);
-               Log.d("nome", usuario.getName());
-           }
-       });
+                Log.d("nome", usuario.getName());
+            }
+        });
 
         FirebaseRepository.getChat(channel.getId()).orderBy(ConstantsUtils.CREATION_DATE).addSnapshotListener((queryDocumentSnapshots, e) -> {
 
-                messagelist.clear();
-                for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()) {
-                    if(documentSnapshot.exists()) {
-                        messagelist.add(documentSnapshot.toObject(MensagemChat.class));
-                    }
+            messagelist.clear();
+            for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()) {
+                if (documentSnapshot.exists()) {
+                    messagelist.add(documentSnapshot.toObject(MensagemChat.class));
                 }
+            }
 
-                if(messagelist.size() > 0) {
+            if (messagelist.size() > 0) {
                 adapter.update(messagelist);
             }
         });
@@ -120,36 +123,38 @@ public class ChatActivity extends AppCompatActivity {
 
             String message = editTextMessage.getText().toString();
 
-           switch (message) {
+            switch (message) {
                 case "/kick":
-                    UsersDialogFragment.newInstance().setList(list).setUser(usuario).setChannelId(id).setCodeComando(1).show(getSupportFragmentManager(), "users");
+                    UsersDialogFragment.newInstance().setList(list).setUser(usuario).setChannelId(channel.getId()).setCodeComando(1).show(getSupportFragmentManager(), "users");
                     break;
                 case "/quit":
-                    UsersDialogFragment.newInstance().setList(list).setUser(usuario).setChannelId(id).setCodeComando(2).show(getSupportFragmentManager(), "users");
+                    UsersDialogFragment.newInstance().setList(list).setUser(usuario).setChannelId(channel.getId()).setCodeComando(2).show(getSupportFragmentManager(), "users");
                     break;
-
-            try {
-                    MensagemChat mensagemChat = new MensagemChat();
-                    mensagemChat.setNameUser(user.getDisplayName());
-                    mensagemChat.setIdUser(user.getUid());
-                    mensagemChat.setText(message);
-                    mensagemChat.setCreationDate(Calendar.getInstance().getTimeInMillis());
-                    editTextMessage.setText("");
-                    FirebaseUtils.getConversas(channel.getId()).add(mensagemChat.getMap());
-
-            } catch (Exception e){
-                     e.printStackTrace();
             }
+
         });
-
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.chat_menu, menu);
-        return super.onCreateOptionsMenu(menu);
+    private void save(String message){
+        try {
+            MensagemChat mensagemChat = new MensagemChat();
+            mensagemChat.setNameUser(user.getDisplayName());
+            mensagemChat.setIdUser(user.getUid());
+            mensagemChat.setText(message);
+            mensagemChat.setCreationDate(Calendar.getInstance().getTimeInMillis());
+            editTextMessage.setText("");
+            FirebaseUtils.getConversas(channel.getId()).add(mensagemChat.getMap());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
+        @Override
+        public boolean onCreateOptionsMenu (Menu menu){
+            getMenuInflater().inflate(R.menu.chat_menu, menu);
+            return super.onCreateOptionsMenu(menu);
+        }
 
 
 

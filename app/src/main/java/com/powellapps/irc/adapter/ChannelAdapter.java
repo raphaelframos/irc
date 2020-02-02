@@ -37,7 +37,6 @@ import com.powellapps.irc.utils.ConstantsUtils;
 import com.powellapps.irc.utils.FirebaseUtils;
 import com.powellapps.irc.utils.RandomUtils;
 
-import java.nio.channels.Channel;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,18 +64,19 @@ public class ChannelAdapter extends RecyclerView.Adapter<ChannelAdapter.ViewHold
         if(channel != null){
             holder.bind(channel);
             holder.itemView.setOnClickListener(v -> {
-              
-               FirebaseRepository.getUsersBan(channel.getId()).whereEqualTo("id", FirebaseUtils.getUserId()).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                @Override
-                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                    if (!queryDocumentSnapshots.isEmpty()) {
-                        RandomUtils.mostraAlerta("Usuario Banido!", "Você foi banido desse canal", activity);
-                    } else  {
-                        Intent it = new Intent(activity, ChatActivity.class);
-                        it.putExtra(ConstantsUtils.ID, channel);
-                        activity.startActivity(it);
+
+                FirebaseRepository.getUsersBan(channel.getId()).whereEqualTo("id", FirebaseUtils.getUserId()).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        if (!queryDocumentSnapshots.isEmpty()) {
+                            RandomUtils.mostraAlerta("Usuario Banido!", "Você foi banido desse canal", activity);
+                        } else {
+                            Intent it = new Intent(activity, ChatActivity.class);
+                            it.putExtra(ConstantsUtils.CHANNEL, channel);
+                            activity.startActivity(it);
+                        }
                     }
-                }
+                });
             });
          
         }
