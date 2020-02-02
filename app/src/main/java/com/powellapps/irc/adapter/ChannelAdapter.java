@@ -62,22 +62,24 @@ public class ChannelAdapter extends RecyclerView.Adapter<ChannelAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         IrcChannel channel = channels.get(position);
-        holder.bind(channel);
-        holder.itemView.setOnClickListener(v -> {
-            FirebaseRepository.getUsersBan(channel.getId()).whereEqualTo("id", FirebaseUtils.getUserId()).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+        if(channel != null){
+            holder.bind(channel);
+            holder.itemView.setOnClickListener(v -> {
+              
+               FirebaseRepository.getUsersBan(channel.getId()).whereEqualTo("id", FirebaseUtils.getUserId()).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                 @Override
                 public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                     if (!queryDocumentSnapshots.isEmpty()) {
                         RandomUtils.mostraAlerta("Usuario Banido!", "Você foi banido desse canal", activity);
                     } else  {
                         Intent it = new Intent(activity, ChatActivity.class);
-                        it.putExtra(ConstantsUtils.ID, channel.getId());
+                        it.putExtra(ConstantsUtils.ID, channel);
                         activity.startActivity(it);
                     }
                 }
             });
-
-        });
+         
+        }
         
     }
 
@@ -99,6 +101,11 @@ public class ChannelAdapter extends RecyclerView.Adapter<ChannelAdapter.ViewHold
         recyclerView.setLayoutAnimation(controller);
         recyclerView.getAdapter().notifyDataSetChanged();
         recyclerView.scheduleLayoutAnimation();
+    }
+
+    public void clean() {
+        this.channels = new ArrayList<>();
+        notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
