@@ -61,6 +61,7 @@ public class LoginActivity extends FragmentActivity {
 
     private void goToMain() {
         startActivity(new Intent(this, MainActivity.class));
+        finish();
     }
 
     private void signIn() {
