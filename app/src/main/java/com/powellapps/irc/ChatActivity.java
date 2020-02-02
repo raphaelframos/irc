@@ -1,24 +1,21 @@
 package com.powellapps.irc;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Dialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.powellapps.irc.adapter.ChatAdapter;
 import com.powellapps.irc.adapter.UserChannelAdapter;
 import com.powellapps.irc.firebase.FirebaseRepository;
@@ -28,10 +25,8 @@ import com.powellapps.irc.model.MensagemChat;
 import com.powellapps.irc.model.User;
 import com.powellapps.irc.utils.ConstantsUtils;
 import com.powellapps.irc.utils.FirebaseUtils;
-import com.powellapps.irc.utils.MessageUtils;
 import com.powellapps.irc.viewmodel.ViewModelChannel;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -44,9 +39,11 @@ public class ChatActivity extends AppCompatActivity {
     private Button button;
     private UserChannelAdapter usersAdapter;
     private List<User> list = new ArrayList<>();
+    private User usuario;
     private String[] COMANDOS = new String[] {
-            "/kick", "/sussurrar", "/silenciar"
+            "/kick", "/quit"
     };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,10 +87,16 @@ public class ChatActivity extends AppCompatActivity {
 
         });
 
-
-
+       FirebaseRepository.getUser(FirebaseUtils.getUserId()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+           @Override
+           public void onSuccess(DocumentSnapshot documentSnapshot) {
+                usuario = documentSnapshot.toObject(User.class);
+               Log.d("nome", usuario.getName());
+           }
+       });
 
         FirebaseRepository.getChat(channel.getId()).orderBy(ConstantsUtils.CREATION_DATE).addSnapshotListener((queryDocumentSnapshots, e) -> {
+
                 messagelist.clear();
                 for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()) {
                     if(documentSnapshot.exists()) {
@@ -113,16 +116,19 @@ public class ChatActivity extends AppCompatActivity {
 
 
         button.setOnClickListener(v -> {
+
+
             String message = editTextMessage.getText().toString();
 
-            if(message.equals("/kick")) {
-                UsersDialogFragment.newInstance().setList(list).setChannelId(channel.getId()).show(getSupportFragmentManager(), "users");
-            } else if (message.equals("/sussurrar")) {
+           switch (message) {
+                case "/kick":
+                    UsersDialogFragment.newInstance().setList(list).setUser(usuario).setChannelId(id).setCodeComando(1).show(getSupportFragmentManager(), "users");
+                    break;
+                case "/quit":
+                    UsersDialogFragment.newInstance().setList(list).setUser(usuario).setChannelId(id).setCodeComando(2).show(getSupportFragmentManager(), "users");
+                    break;
 
-
-            }
-
-            try{
+            try {
                     MensagemChat mensagemChat = new MensagemChat();
                     mensagemChat.setNameUser(user.getDisplayName());
                     mensagemChat.setIdUser(user.getUid());
@@ -131,9 +137,8 @@ public class ChatActivity extends AppCompatActivity {
                     editTextMessage.setText("");
                     FirebaseUtils.getConversas(channel.getId()).add(mensagemChat.getMap());
 
-            }catch (Exception e){
-                e.printStackTrace();
-
+            } catch (Exception e){
+                     e.printStackTrace();
             }
         });
 

@@ -137,6 +137,13 @@ public class FirebaseRepository {
         getChannels().document(id).collection(ConstantsUtils.BANNED).document(user.getId()).set(user);
     }
 
+    public static void exitChannel(String id, User user) {
+    }
+
+    public static CollectionReference getUsersBan(String id) {
+        return FirebaseFirestore.getInstance().collection(ConstantsUtils.CHANNELS).document(id).collection(ConstantsUtils.BANNED);
+    }
+
 
     public LiveData<List<IrcChannel>> getAccessedChannels(List<String> ids) {
         List<Task<DocumentSnapshot>> tasks = new ArrayList<>();

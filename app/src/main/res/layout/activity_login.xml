@@ -9,7 +9,8 @@
 
     <Button
         android:id="@+id/button_login"
-        android:text="Realizar Login "
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></Button>
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Realizar Login "></Button>
 </LinearLayout>
