@@ -2,40 +2,28 @@ package com.powellapps.irc.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.powellapps.irc.ChatActivity;
 import com.powellapps.irc.R;
 import com.powellapps.irc.firebase.FirebaseRepository;
 import com.powellapps.irc.model.IrcChannel;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentActivity;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestoreException;
+import androidx.fragment.app.FragmentActivity;
+
 import com.google.firebase.firestore.QuerySnapshot;
-import com.powellapps.irc.ChatActivity;
-import com.powellapps.irc.R;
-import com.powellapps.irc.model.IrcChannel;
-import com.powellapps.irc.model.User;
 import com.powellapps.irc.utils.ConstantsUtils;
 import com.powellapps.irc.utils.FirebaseUtils;
-import com.powellapps.irc.utils.RandomUtils;
+import com.powellapps.irc.utils.MessageUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +56,7 @@ public class ChannelAdapter extends RecyclerView.Adapter<ChannelAdapter.ViewHold
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         if (!queryDocumentSnapshots.isEmpty()) {
-                            RandomUtils.mostraAlerta("Usuario Banido!", "Você foi banido desse canal", activity);
+                            MessageUtils.mostraAlerta("Usuario Banido!", "Você foi banido desse canal", activity);
                         } else {
                             Intent it = new Intent(activity, ChatActivity.class);
                             it.putExtra(ConstantsUtils.CHANNEL, channel);

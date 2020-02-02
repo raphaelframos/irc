@@ -25,6 +25,7 @@ import com.powellapps.irc.model.MensagemChat;
 import com.powellapps.irc.model.User;
 import com.powellapps.irc.utils.ConstantsUtils;
 import com.powellapps.irc.utils.FirebaseUtils;
+import com.powellapps.irc.utils.MessageUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -135,7 +136,7 @@ public class ChatActivity extends AppCompatActivity {
             mensagemChat.setCreationDate(Calendar.getInstance().getTimeInMillis());
             editTextMessage.setText("");
             FirebaseUtils.getConversas(channel.getId()).add(mensagemChat.getMap());
-
+            MessageUtils.closeKeyboard(this, editTextMessage);
         } catch (Exception e) {
             e.printStackTrace();
         }

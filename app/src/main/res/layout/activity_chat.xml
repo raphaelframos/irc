@@ -48,6 +48,7 @@
 
             <AutoCompleteTextView
                 android:maxLines="1"
+                android:imeOptions="actionDone"
                 android:id="@+id/editText_mensagem"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
