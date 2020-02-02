@@ -23,6 +23,7 @@ import com.powellapps.irc.adapter.ChatAdapter;
 import com.powellapps.irc.adapter.UserChannelAdapter;
 import com.powellapps.irc.firebase.FirebaseRepository;
 import com.powellapps.irc.fragment.UsersDialogFragment;
+import com.powellapps.irc.model.IrcChannel;
 import com.powellapps.irc.model.MensagemChat;
 import com.powellapps.irc.model.User;
 import com.powellapps.irc.utils.ConstantsUtils;
@@ -79,14 +80,20 @@ public class ChatActivity extends AppCompatActivity {
         usersAdapter = new UserChannelAdapter();
         recyclerViewUsers.setAdapter(usersAdapter);
 
-        String id = getIntent().getStringExtra(ConstantsUtils.ID);
+        IrcChannel channel = (IrcChannel) getIntent().getSerializableExtra(ConstantsUtils.CHANNEL);
+        FirebaseRepository.getUser(FirebaseUtils.getUserId()).addSnapshotListener((documentSnapshot, e) -> {
+            User user = documentSnapshot.toObject(User.class);
 
-       FirebaseRepository.getUser(FirebaseUtils.getUserId()).addSnapshotListener((documentSnapshot, e) -> {
-            FirebaseRepository.add(id, documentSnapshot.toObject(User.class));
+            if(!channel.contain(user)){
+                FirebaseRepository.add(channel, user);
+            }
+
         });
 
 
-        FirebaseRepository.getChat(id).orderBy(ConstantsUtils.CREATION_DATE).addSnapshotListener((queryDocumentSnapshots, e) -> {
+
+
+        FirebaseRepository.getChat(channel.getId()).orderBy(ConstantsUtils.CREATION_DATE).addSnapshotListener((queryDocumentSnapshots, e) -> {
                 messagelist.clear();
                 for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()) {
                     if(documentSnapshot.exists()) {
@@ -99,7 +106,7 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-        ViewModelProviders.of(this).get(ViewModelChannel.class).getUsersInChannel(id).observe(this, users -> {
+        ViewModelProviders.of(this).get(ViewModelChannel.class).getUsersInChannel(channel.getId()).observe(this, users -> {
             usersAdapter.update(users);
             list = users;
         });
@@ -109,7 +116,7 @@ public class ChatActivity extends AppCompatActivity {
             String message = editTextMessage.getText().toString();
 
             if(message.equals("/kick")) {
-                UsersDialogFragment.newInstance().setList(list).setChannelId(id).show(getSupportFragmentManager(), "users");
+                UsersDialogFragment.newInstance().setList(list).setChannelId(channel.getId()).show(getSupportFragmentManager(), "users");
             } else if (message.equals("/sussurrar")) {
 
 
@@ -122,7 +129,7 @@ public class ChatActivity extends AppCompatActivity {
                     mensagemChat.setText(message);
                     mensagemChat.setCreationDate(Calendar.getInstance().getTimeInMillis());
                     editTextMessage.setText("");
-                    FirebaseUtils.getConversas(id).add(mensagemChat.getMap());
+                    FirebaseUtils.getConversas(channel.getId()).add(mensagemChat.getMap());
 
             }catch (Exception e){
                 e.printStackTrace();

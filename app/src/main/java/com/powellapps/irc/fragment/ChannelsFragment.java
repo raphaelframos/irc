@@ -5,12 +5,12 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,18 +18,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
-import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.powellapps.irc.R;
 import com.powellapps.irc.adapter.ChannelAdapter;
+import com.powellapps.irc.firebase.FirebaseRepository;
 import com.powellapps.irc.model.IrcChannel;
 import com.powellapps.irc.utils.ConstantsUtils;
 import com.powellapps.irc.utils.FirebaseUtils;
+import com.powellapps.irc.utils.MessageUtils;
 import com.powellapps.irc.viewmodel.ViewModelChannel;
 
 import java.util.ArrayList;
@@ -41,6 +37,8 @@ import java.util.List;
 public class ChannelsFragment extends Fragment {
 
     private static final int ALL = 2;
+    private static final int ON = 0;
+    private static final int VISITED = 1;
     private ChannelAdapter adapter;
     private ViewModelChannel viewModelChannel;
     private RecyclerView recyclerViewChannels;
@@ -48,9 +46,9 @@ public class ChannelsFragment extends Fragment {
 
     public ChannelsFragment() {}
 
-    public static ChannelsFragment newInstance(int position) {
+    public static ChannelsFragment newInstance(String userId) {
         Bundle bundle = new Bundle();
-        bundle.putInt(ConstantsUtils.POSITION, position);
+        bundle.putString(ConstantsUtils.ID, userId);
         ChannelsFragment fragment = new ChannelsFragment();
         fragment.setArguments(bundle);
         return fragment;
@@ -73,23 +71,27 @@ public class ChannelsFragment extends Fragment {
         recyclerViewChannels.setAdapter(adapter);
         viewModelChannel = ViewModelProviders.of(this).get(ViewModelChannel.class);
         setHasOptionsMenu(true);
-
+        String id = getArguments().getString(ConstantsUtils.ID);
+        findOnChannels(id);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        findChannels();
 
+    private void getVisited() {
+        viewModelChannel.getVisitedChannels(FirebaseUtils.getUserId()).observe(this, ids ->{
+            viewModelChannel.getAccessedChannels(ids).observe(this, channels -> {
+                adapter.update(channels, recyclerViewChannels);
+            });
+        });
     }
 
-    private void findChannels() {
-        int position = getArguments().getInt(ConstantsUtils.POSITION);
-        if(position == ALL){
-            getAllChannels();
-        }else{
-            adapter.update(new ArrayList<>(), recyclerViewChannels);
-        }
+    private void getOnChannels() {
+        viewModelChannel.getOnChannelsIds(FirebaseUtils.getUserId()).observe(this, ids ->{
+            viewModelChannel.getAccessedChannels(ids).observe(this, channels -> {
+                adapter.update(channels, recyclerViewChannels);
+            });
+        });
+
+
     }
 
     private void getAllChannels() {
@@ -130,7 +132,7 @@ public class ChannelsFragment extends Fragment {
             }
             adapter.update(channelsFound, recyclerViewChannels);
         }else if(text.isEmpty()){
-            findChannels();
+         //   findChannels();
         }
     }
 
@@ -163,4 +165,11 @@ public class ChannelsFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
+    public void findOnChannels(String userId) {
+        adapter.update(new ArrayList<>(), recyclerViewChannels);
+    }
+
+    public void findChannels() {
+        getAllChannels();
+    }
 }

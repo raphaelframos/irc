@@ -7,14 +7,15 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 public class User implements Serializable {
 
     private String name;
     private String id;
-    private String office;
+    private String office = "";
     private List<String> channels = new ArrayList<>();
-    private String nickname;
+    private String nickname = "";
 
     public User() {}
 
@@ -63,8 +64,8 @@ public class User implements Serializable {
         this.channels = channels;
     }
 
-    public String getNameChannel() {
-        return "+"+getName();
+    public String getChannelName() {
+        return "+"+getNickname();
     }
 
     public String getOffice() {
@@ -90,6 +91,21 @@ public class User implements Serializable {
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return name.equals(user.name) &&
+                id.equals(user.id) &&
+                nickname.equals(user.nickname);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, id, nickname);
     }
 
 }

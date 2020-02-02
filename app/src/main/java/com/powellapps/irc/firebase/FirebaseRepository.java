@@ -3,26 +3,48 @@ package com.powellapps.irc.firebase;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.annotation.Nullable;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.CollectionReference;
 
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Transaction;
+import com.powellapps.irc.model.Category;
 import com.powellapps.irc.model.IrcChannel;
 import com.powellapps.irc.model.User;
 import com.powellapps.irc.utils.ConstantsUtils;
-
+import java.util.ArrayList;
 import java.util.List;
 
 public class FirebaseRepository {
 
     private MutableLiveData<List<IrcChannel>> mutableLiveData = new MutableLiveData<>();
+    private MutableLiveData<List<String>> mutableOnChannelIdsLiveData = new MutableLiveData<>();
+    private MutableLiveData<List<String>> visitedIdsLiveData = new MutableLiveData<>();
+    private MutableLiveData<IrcChannel> mutableOnChannelLiveData = new MutableLiveData<>();
     private MutableLiveData<List<User>> mutableLiveDataUsers = new MutableLiveData<>();
+    private MutableLiveData<List<IrcChannel>> accessedChannels = new MutableLiveData<>();
 
-    public static void add(String id, User user) {
-        user.add(id);
-        getChannelUsers(id).document(user.getId()).set(user);
-        getUser(user.getId()).set(user);
+    public static void add(IrcChannel channel, User user) {
+        user.setOffice(Category.USER.getName());
+        channel.add(user);
+        getChannels().document(channel.getId()).update(channel.usersMap());
+        setChannelLists(channel, user);
+    }
+
+    private static void setChannelLists(IrcChannel channel, User user) {
+        getDB().collection("channelList").document(user.getId()).collection("on").add(channel.idMap());
+        getDB().collection("channelList").document(user.getId()).collection("visited").add(channel.idMap());
     }
 
     public static DocumentReference getUser(String userId) {
@@ -31,26 +53,6 @@ public class FirebaseRepository {
 
     private static FirebaseFirestore getDB() {
         return FirebaseFirestore.getInstance();
-    }
-    
-
-    public static void getOnChannels(String userId) {
-        getUser(userId).get().addOnSuccessListener(documentSnapshot -> {
-
-            User user = documentSnapshot.toObject(User.class);
-            if(user != null) {
-                List<String> channelsIds = (List<String>) documentSnapshot.get(ConstantsUtils.CHANNELS);
-                if(channelsIds != null) {
-                    user.setChannels(channelsIds);
-                    for (String channelId : user.getChannels()) {
-                        getChannels().document(channelId).addSnapshotListener((documentSnapshot1, e) -> {
-                            IrcChannel channel = documentSnapshot1.toObject(IrcChannel.class);
-
-                        });
-                    }
-                }
-            }
-        });
     }
 
     public LiveData<List<IrcChannel>> getMutableLiveData() {
@@ -67,6 +69,48 @@ public class FirebaseRepository {
         return mutableLiveDataUsers;
     }
 
+    public LiveData<IrcChannel> getMutableLiveDataOnChannel(String id) {
+
+        getChannels().document(id).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                mutableOnChannelLiveData.setValue(documentSnapshot.toObject(IrcChannel.class));
+            }
+        });
+
+        return mutableOnChannelLiveData;
+    }
+
+    public LiveData<List<String>> getMutableLiveDataOnChannelIds(String userId) {
+
+        List<String> channels = new ArrayList<>();
+
+        getDB().collection("channelList").document(userId).collection("accessed").addSnapshotListener((queryDocumentSnapshots, e) -> {
+            for(DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()){
+                channels.add((String) documentSnapshot.get("id"));
+            }
+            mutableOnChannelIdsLiveData.setValue(channels);
+        });
+
+        return mutableOnChannelIdsLiveData;
+    }
+    public LiveData<List<String>> getMutableLiveDataVisitedChannelIds(String userId) {
+
+        List<String> channels = new ArrayList<>();
+
+        getDB().collection("channelList").document(userId).collection("visited").addSnapshotListener((queryDocumentSnapshots, e) -> {
+            for(DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()){
+                if(documentSnapshot != null && documentSnapshot.get("id") != null){
+                    channels.add((String) documentSnapshot.get("id"));
+                }
+            }
+            visitedIdsLiveData.setValue(channels);
+        });
+
+        return visitedIdsLiveData;
+    }
+
+
     private static CollectionReference getChannelUsers(String id) {
         return getChannels().document(id).collection(ConstantsUtils.USERS);
     }
@@ -79,19 +123,10 @@ public class FirebaseRepository {
     public static void save(IrcChannel ircChannel) {
         getUser(ircChannel.getCreator()).addSnapshotListener( (documentSnapshot, e) -> {
             User user = documentSnapshot.toObject(User.class);
+            user.setOffice(Category.CREATOR.getName());
             ircChannel.add(user);
-            getChannels().add(ircChannel);
+            getChannels().document().set(ircChannel);
         });
-        /*
-        getChannels().add(ircChannel.map()).addOnSuccessListener(documentReference -> {
-            HashMap<String, Object> map = new HashMap<>();
-            ArrayList<String> channels = new ArrayList<>();
-            channels.add(documentReference.getId());
-            map.put(ConstantsUtils.CHANNELS, channels);
-            getUser(ircChannel.getCreator()).update(map);
-        });
-
-         */
     }
 
     public static CollectionReference getChannels() {
@@ -103,5 +138,30 @@ public class FirebaseRepository {
     }
 
 
+    public LiveData<List<IrcChannel>> getAccessedChannels(List<String> ids) {
+        List<Task<DocumentSnapshot>> tasks = new ArrayList<>();
+        for(String id : ids ){
+            tasks.add(getChannels().document(id).get());
+        }
+        List<IrcChannel> channels = new ArrayList<>();
+        Tasks.whenAllSuccess(tasks).addOnSuccessListener(list -> {
+            for(Object o : list){
+                channels.add(((DocumentSnapshot) o).toObject(IrcChannel.class));
+            }
+            accessedChannels.setValue(channels);
+        });
 
+        return accessedChannels;
+    }
+
+    private Task<Void> getChannels(final List<String> ids) {
+
+        return getDB().runTransaction(transaction -> {
+            List<IrcChannel> channels = new ArrayList<>();
+            IrcChannel ircChannel = transaction.get(getChannels().document(ids.get(0))).toObject(IrcChannel.class);
+            channels.add(ircChannel);
+
+            return null;
+        });
+    }
 }

@@ -15,4 +15,5 @@ public class ConstantsUtils {
     public static final String OFFICE = "office";
     public static final String NICKNAME = "nickname";
     public static final String BANNED = "banned";
+    public static final String CHANNEL = "channel";
 }

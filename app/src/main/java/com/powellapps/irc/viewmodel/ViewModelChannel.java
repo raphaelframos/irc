@@ -6,12 +6,9 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.powellapps.irc.firebase.FirebaseRepository;
 import com.powellapps.irc.model.IrcChannel;
 import com.powellapps.irc.model.User;
-import com.powellapps.irc.utils.ConstantsUtils;
 
 import java.util.List;
 
@@ -31,6 +28,21 @@ public class ViewModelChannel extends AndroidViewModel {
 
     public LiveData<List<User>> getUsersInChannel(String id) {
         return firebaseRepository.getMutableLiveDataUsersInChannel(id);
+    }
+
+    public LiveData<List<String>> getOnChannelsIds(String userId) {
+        return firebaseRepository.getMutableLiveDataOnChannelIds(userId);
+    }
+
+    public LiveData<IrcChannel> getOnChannel(String id) {
+        return firebaseRepository.getMutableLiveDataOnChannel(id);
+    }
+
+    public LiveData<List<IrcChannel>> getAccessedChannels(List<String> ids) {
+        return firebaseRepository.getAccessedChannels(ids);
+    }
+    public LiveData<List<String>> getVisitedChannels(String userId) {
+        return firebaseRepository.getMutableLiveDataVisitedChannelIds(userId);
     }
 
 }
