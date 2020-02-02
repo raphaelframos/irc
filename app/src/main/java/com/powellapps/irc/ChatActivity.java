@@ -35,7 +35,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private List<MensagemChat> messagelist;
     private ChatAdapter adapter;
-    private FirebaseUser user;
+    private User user;
     private EditText editTextMessage;
     private Button button;
     private UserChannelAdapter usersAdapter;
@@ -44,7 +44,6 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-        user = FirebaseUtils.getFirebaseUser();
         RecyclerView recyclerViewChat = findViewById(R.id.recyclerView_chat);
         RecyclerView recyclerViewUsers = findViewById(R.id.recyclerView_users);
 
@@ -70,8 +69,9 @@ public class ChatActivity extends AppCompatActivity {
         recyclerViewUsers.setAdapter(usersAdapter);
 
         IrcChannel channel = (IrcChannel) getIntent().getSerializableExtra(ConstantsUtils.CHANNEL);
+        usersAdapter.update(channel.getUsers());
         FirebaseRepository.getUser(FirebaseUtils.getUserId()).addSnapshotListener((documentSnapshot, e) -> {
-            User user = documentSnapshot.toObject(User.class);
+            user = documentSnapshot.toObject(User.class);
 
             if(!channel.contain(user)){
                 FirebaseRepository.add(channel, user);
@@ -96,7 +96,7 @@ public class ChatActivity extends AppCompatActivity {
         });
 
         ViewModelProviders.of(this).get(ViewModelChannel.class).getUsersInChannel(channel.getId()).observe(this, users -> {
-            usersAdapter.update(users);
+
         });
 
 
@@ -105,7 +105,7 @@ public class ChatActivity extends AppCompatActivity {
 
             try{
                     MensagemChat mensagemChat = new MensagemChat();
-                    mensagemChat.setNameUser(user.getDisplayName());
+                    mensagemChat.setNameUser();
                     mensagemChat.setIdUser(user.getUid());
                     mensagemChat.setText(message);
                     mensagemChat.setCreationDate(Calendar.getInstance().getTimeInMillis());
