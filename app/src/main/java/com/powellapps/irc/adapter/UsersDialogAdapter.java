@@ -1,6 +1,7 @@
 package com.powellapps.irc.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,15 +24,16 @@ import java.util.List;
 public class UsersDialogAdapter extends RecyclerView.Adapter<UsersDialogAdapter.ViewHolder>{
 
     private List<User> users;
-
     private String channelId;
     private DialogFragment dialogFragment;
+    private int codigo;
 
 
-    public UsersDialogAdapter(List<User> users, String channelId, DialogFragment dialogFragment) {
+    public UsersDialogAdapter(List<User> users, String channelId, DialogFragment dialogFragment, int codigo) {
         this.users = users;
         this.channelId = channelId;
         this.dialogFragment = dialogFragment;
+        this.codigo = codigo;
     }
 
     @NonNull
@@ -51,9 +53,14 @@ public class UsersDialogAdapter extends RecyclerView.Adapter<UsersDialogAdapter.
 
       holder.itemView.setOnClickListener((View v) -> {
 
-          FirebaseRepository.banUserforChannel(channelId,user);
-          dialogFragment.dismiss();
-
+          switch (codigo) {
+              case 1:
+                  FirebaseRepository.banUserforChannel(channelId,user);
+                  dialogFragment.dismiss();
+                  break;
+              case 2:
+                  
+          }
 
         });
 

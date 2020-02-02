@@ -3,6 +3,7 @@ package com.powellapps.irc.fragment;
 
 import android.os.Bundle;
 
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
@@ -10,10 +11,13 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseUser;
 import com.powellapps.irc.R;
 import com.powellapps.irc.adapter.ChannelAdapter;
 import com.powellapps.irc.adapter.UsersDialogAdapter;
@@ -31,7 +35,11 @@ public class UsersDialogFragment extends DialogFragment {
     private UsersDialogAdapter adapter;
     private ViewModelChannel viewModelChannel;
     private List<User> userList;
+    private List<User> listaNova;
     private String channelId;
+    private int codigo;
+    private User user;
+
 
 
     public static UsersDialogFragment newInstance() {
@@ -45,19 +53,20 @@ public class UsersDialogFragment extends DialogFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_users_dialog, container, false);
+        Toolbar myToolbar = (Toolbar) view.findViewById(R.id.toolbar_users_dialog);
+
+        myToolbar.setTitle("Escolha o usuario!");
 
         RecyclerView recyclerViewUsersDialog = view.findViewById(R.id.recycler_view_users_dialog);
         recyclerViewUsersDialog.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewUsersDialog.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
 
-        adapter = new UsersDialogAdapter(userList, channelId,this);
+        adapter = new UsersDialogAdapter(listaNova, channelId, this, codigo);
         recyclerViewUsersDialog.setAdapter(adapter);
+
+
+
         setHasOptionsMenu(true);
-
-
-
-
-
 
         return view;
     }
@@ -72,4 +81,25 @@ public class UsersDialogFragment extends DialogFragment {
         return this;
     }
 
+    public UsersDialogFragment setCodeComando(int codigo){
+        this.codigo = codigo;
+        return this;
+    }
+    public UsersDialogFragment setUser(User user) {
+        this.user = user;
+        return this;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        if (getDialog() != null) {
+            ViewGroup.LayoutParams params = getDialog().getWindow().getAttributes();
+            params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+            params.height = ViewGroup.LayoutParams.MATCH_PARENT;
+            getDialog().getWindow().setAttributes((android.view.WindowManager.LayoutParams) params);
+        }
+
+    }
 }
