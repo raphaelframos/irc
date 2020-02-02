@@ -27,7 +27,7 @@ public class UserChannelAdapter extends RecyclerView.Adapter<UserChannelAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.textViewName.setText(users.get(position).getNameChannel());
+        holder.textViewName.setText(users.get(position).getChannelName());
     }
 
     @Override

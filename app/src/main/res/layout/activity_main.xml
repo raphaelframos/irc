@@ -8,21 +8,17 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/viewPager"
-        app:tabMode="fixed"
+    <com.google.android.material.tabs.TabLayout
+        app:tabSelectedTextColor="@color/colorAccent"
+        android:background="@android:color/white"
+        android:id="@+id/tabLayout_navigation"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content" />
 
-        <com.google.android.material.tabs.TabLayout
-            app:tabSelectedTextColor="@color/colorAccent"
-            android:background="@android:color/white"
-            android:id="@+id/tabLayout_navigation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-    </androidx.viewpager.widget.ViewPager>
-
+    <FrameLayout
+        android:id="@+id/frame_fragment_channels"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></FrameLayout>
 
 
 

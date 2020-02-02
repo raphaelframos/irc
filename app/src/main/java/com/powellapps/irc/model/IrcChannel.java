@@ -16,6 +16,7 @@ public class IrcChannel implements Serializable {
     @DocumentId
     private String id;
     private List<User> users = new ArrayList<>();
+    private boolean active = true;
 
     public IrcChannel(){}
 
@@ -94,5 +95,13 @@ public class IrcChannel implements Serializable {
         HashMap<String, String> map = new HashMap<>();
         map.put(ConstantsUtils.ID, getId());
         return map;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

@@ -46,9 +46,9 @@ public class ChannelsFragment extends Fragment {
 
     public ChannelsFragment() {}
 
-    public static ChannelsFragment newInstance(int position) {
+    public static ChannelsFragment newInstance(String userId) {
         Bundle bundle = new Bundle();
-        bundle.putInt(ConstantsUtils.POSITION, position);
+        bundle.putString(ConstantsUtils.ID, userId);
         ChannelsFragment fragment = new ChannelsFragment();
         fragment.setArguments(bundle);
         return fragment;
@@ -71,29 +71,10 @@ public class ChannelsFragment extends Fragment {
         recyclerViewChannels.setAdapter(adapter);
         viewModelChannel = ViewModelProviders.of(this).get(ViewModelChannel.class);
         setHasOptionsMenu(true);
+        String id = getArguments().getString(ConstantsUtils.ID);
+        findOnChannels(id);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        findChannels();
-
-    }
-
-    private void findChannels() {
-        int position = getArguments().getInt(ConstantsUtils.POSITION);
-
-        if(position == ON){
-            getOnChannels();
-        }else if(position == VISITED){
-            getVisited();
-        }else
-        if(position == ALL){
-            getAllChannels();
-        }else{
-            adapter.update(new ArrayList<>(), recyclerViewChannels);
-        }
-    }
 
     private void getVisited() {
         viewModelChannel.getVisitedChannels(FirebaseUtils.getUserId()).observe(this, ids ->{
@@ -151,7 +132,7 @@ public class ChannelsFragment extends Fragment {
             }
             adapter.update(channelsFound, recyclerViewChannels);
         }else if(text.isEmpty()){
-            findChannels();
+         //   findChannels();
         }
     }
 
@@ -184,4 +165,11 @@ public class ChannelsFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
+    public void findOnChannels(String userId) {
+        adapter.update(new ArrayList<>(), recyclerViewChannels);
+    }
+
+    public void findChannels() {
+        getAllChannels();
+    }
 }

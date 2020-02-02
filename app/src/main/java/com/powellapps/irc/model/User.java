@@ -63,8 +63,8 @@ public class User implements Serializable {
         this.channels = channels;
     }
 
-    public String getNameChannel() {
-        return "+"+getName();
+    public String getChannelName() {
+        return "+"+getNickname();
     }
 
     public String getOffice() {

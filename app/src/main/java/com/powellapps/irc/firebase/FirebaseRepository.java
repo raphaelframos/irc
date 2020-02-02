@@ -125,10 +125,7 @@ public class FirebaseRepository {
             User user = documentSnapshot.toObject(User.class);
             user.setOffice(Category.CREATOR.getName());
             ircChannel.add(user);
-            DocumentReference ref = getChannels().document();
-            ref.set(ircChannel);
-            ircChannel.setId(ref.getId());
-            setChannelLists(ircChannel, user);
+            getChannels().document().set(ircChannel);
         });
     }
 

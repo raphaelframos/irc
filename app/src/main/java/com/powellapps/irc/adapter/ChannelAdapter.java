@@ -54,12 +54,15 @@ public class ChannelAdapter extends RecyclerView.Adapter<ChannelAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         IrcChannel channel = channels.get(position);
-        holder.bind(channel);
-        holder.itemView.setOnClickListener(v -> {
-            Intent it = new Intent(activity, ChatActivity.class);
-            it.putExtra(ConstantsUtils.CHANNEL, channel);
-            activity.startActivity(it);
-        });
+        if(channel != null){
+            holder.bind(channel);
+            holder.itemView.setOnClickListener(v -> {
+                Intent it = new Intent(activity, ChatActivity.class);
+                it.putExtra(ConstantsUtils.CHANNEL, channel);
+                activity.startActivity(it);
+            });
+        }
+
         
     }
 
