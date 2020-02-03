@@ -14,7 +14,6 @@ public class User implements Serializable {
     private String name;
     private String id;
     private String office = "";
-    private List<String> channels = new ArrayList<>();
     private String nickname = "";
 
     public User() {}
@@ -51,18 +50,9 @@ public class User implements Serializable {
         user.put(ConstantsUtils.NAME, getName());
         user.put(ConstantsUtils.OFFICE, getOffice());
         user.put(ConstantsUtils.NICKNAME, getNickname());
-        user.put(ConstantsUtils.CHANNELS, getChannels());
         return user;
     }
 
-
-    public List<String> getChannels() {
-        return channels;
-    }
-
-    public void setChannels(List<String> channels) {
-        this.channels = channels;
-    }
 
     public String getChannelName() {
         return "+"+getNickname();
@@ -75,15 +65,6 @@ public class User implements Serializable {
     public void setOffice(String office) {
         this.office = office;
 }
-
-    public void add(String id) {
-        if(channels == null){
-            channels = new ArrayList<>();
-        }
-        if(!channels.contains(id)) {
-            this.channels.add(id);
-        }
-    }
 
     public String getNickname() {
         return nickname;

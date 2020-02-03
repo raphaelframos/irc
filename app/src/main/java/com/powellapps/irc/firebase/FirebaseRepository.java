@@ -64,7 +64,12 @@ public class FirebaseRepository {
 
     public LiveData<List<IrcChannel>> getMutableLiveData() {
         getChannels().orderBy(ConstantsUtils.NAME).addSnapshotListener((queryDocumentSnapshots, e) -> {
-            mutableLiveData.setValue(queryDocumentSnapshots.toObjects(IrcChannel.class));
+            try{
+                mutableLiveData.setValue(queryDocumentSnapshots.toObjects(IrcChannel.class));
+            }catch (Exception e1){
+                e1.printStackTrace();
+            }
+
         });
         return mutableLiveData;
     }
@@ -80,6 +85,7 @@ public class FirebaseRepository {
             user.setOffice(Category.CREATOR.getName());
             ircChannel.add(user);
             getChannels().document().set(ircChannel);
+            getUser(user.getId()).collection("on_channels").add(ircChannel);
         });
     }
 
@@ -99,8 +105,8 @@ public class FirebaseRepository {
     }
 
 
-    public LiveData<List<IrcChannel>> getOnChannels(User user) {
-        getChannels().whereArrayContains("users", user.returnUser()).addSnapshotListener(new EventListener<QuerySnapshot>() {
+    public LiveData<List<IrcChannel>> getOnChannels(String userId) {
+        getUser(userId).collection("on_channels").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                 mutableLiveData.setValue(queryDocumentSnapshots.toObjects(IrcChannel.class));

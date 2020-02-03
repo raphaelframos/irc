@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
             public void onTabSelected(TabLayout.Tab tab) {
 
                 if(tab.getPosition() == 0){
-                  //  fragment.findOnChannels(FirebaseUtils.getUserId());
+                    fragment.findOnChannels(FirebaseUtils.getUserId());
                 }else{
                     fragment.findChannels();
                 }

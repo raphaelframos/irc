@@ -76,12 +76,7 @@ public class ChannelsFragment extends Fragment {
         viewModelChannel = ViewModelProviders.of(this).get(ViewModelChannel.class);
         setHasOptionsMenu(true);
         String id = getArguments().getString(ConstantsUtils.ID);
-        FirebaseRepository.getUser(id).addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                findOnChannels(documentSnapshot.toObject(User.class));
-            }
-        });
+        findOnChannels(id);
 
     }
 
@@ -156,11 +151,11 @@ public class ChannelsFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    public void findOnChannels(User userId) {
+    public void findOnChannels(String userId) {
         getOnChannels(userId);
     }
 
-    private void getOnChannels(User userId) {
+    private void getOnChannels(String userId) {
         viewModelChannel.getOnChannels(userId).observe(this, channels ->{
             this.channels = channels;
             adapter.update(channels, recyclerViewChannels);
