@@ -154,7 +154,7 @@ public class ChatActivity extends AppCompatActivity {
         switch (item.getItemId()){
             case R.id.item_exit:
                 channel.remove(user);
-                FirebaseRepository.remove(channel);
+                FirebaseRepository.remove(channel, user);
                 finish();
                 break;
         }
