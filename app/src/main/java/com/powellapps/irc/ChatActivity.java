@@ -117,17 +117,16 @@ public class ChatActivity extends AppCompatActivity {
             switch (message) {
                 case "/kick":
                     if(channel.getCreator().equalsIgnoreCase(user.getId())){
-                        UsersDialogFragment.newInstance(channel.getUsers()).setUser(usuario).setCodeComando(1).show(getSupportFragmentManager(), "users");
+                        UsersDialogFragment.newInstance(channel).show(getSupportFragmentManager(), "users");
                     }
                     break;
                 case "/quit":
-                    UsersDialogFragment.newInstance(channel.getUsers()).setUser(usuario).setCodeComando(2).show(getSupportFragmentManager(), "users");
+                    FirebaseRepository.remove(channel,user);
+                    finish();
                     break;
-
                     default:
                         save(message);
             }
-
         });
     }
 

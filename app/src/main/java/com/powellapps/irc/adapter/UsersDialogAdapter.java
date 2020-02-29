@@ -24,16 +24,12 @@ import java.util.List;
 public class UsersDialogAdapter extends RecyclerView.Adapter<UsersDialogAdapter.ViewHolder>{
 
     private List<User> users;
-    private String channelId;
+    private IrcChannel ircChannel;
     private DialogFragment dialogFragment;
-    private int codigo;
 
-
-    public UsersDialogAdapter(List<User> users, String channelId, DialogFragment dialogFragment, int codigo) {
-        this.users = users;
-        this.channelId = channelId;
+    public UsersDialogAdapter(IrcChannel ircChannel, DialogFragment dialogFragment) {
+        this.ircChannel = ircChannel;
         this.dialogFragment = dialogFragment;
-        this.codigo = codigo;
     }
 
     @NonNull
@@ -46,21 +42,13 @@ public class UsersDialogAdapter extends RecyclerView.Adapter<UsersDialogAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
-        User user = users.get(position);
-
+        User user = ircChannel.getUsers().get(position);
         holder.textViewName.setText(user.getName());
+        holder.itemView.setOnClickListener((View v) -> {
 
-      holder.itemView.setOnClickListener((View v) -> {
-
-          switch (codigo) {
-              case 1:
-                  FirebaseRepository.banUserforChannel(channelId,user);
+                  FirebaseRepository.banUserforChannel(ircChannel.getId(), user);
                   dialogFragment.dismiss();
-                  break;
-              case 2:
-                  
-          }
+
 
         });
 
