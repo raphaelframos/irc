@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListPopupWindow;
@@ -30,7 +31,7 @@ public class NewChannelDialogFragment extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(DialogFragment.STYLE_NO_TITLE, R.style.DialogStyle);
+      //  setStyle(DialogFragment.STYLE_NORMAL, R.style.DialogStyle);
     }
 
     public static NewChannelDialogFragment newInstance(String id) {
@@ -68,4 +69,11 @@ public class NewChannelDialogFragment extends DialogFragment {
 
         });
     }
+    @Override
+    public void onStart() {
+        super.onStart();
+        getDialog().getWindow()
+                .setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+    }
+
 }

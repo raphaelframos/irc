@@ -77,7 +77,6 @@ public class ChannelsFragment extends Fragment {
         setHasOptionsMenu(true);
         String id = getArguments().getString(ConstantsUtils.ID);
         findOnChannels(id);
-        MessageUtils.show("OnActivityCreated " + id);
     }
 
     private void getAllChannels() {

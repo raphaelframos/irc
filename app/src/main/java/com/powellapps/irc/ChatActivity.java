@@ -82,9 +82,12 @@ public class ChatActivity extends AppCompatActivity {
             user = documentSnapshot.toObject(User.class);
 
             if (!channel.contain(user)) {
-                FirebaseRepository.add(channel, user);
+                try{
+                    FirebaseRepository.add(channel, user);
+                }catch (Exception e1){
+                    e1.printStackTrace();
+                }
             }
-
         });
 
         FirebaseRepository.getUser(FirebaseUtils.getUserId()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
