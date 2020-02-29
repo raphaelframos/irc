@@ -114,7 +114,8 @@ public class LoginActivity extends FragmentActivity {
                     String id = firebaseUser.getUid();
                     User user = new User(account.getDisplayName(), id);
                     NickNameController.alertaDeNickName(LoginActivity.this, user);
-
+                } else {
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 }
 
             }
