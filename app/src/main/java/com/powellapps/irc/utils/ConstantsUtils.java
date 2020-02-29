@@ -9,7 +9,6 @@ public class ConstantsUtils {
     public static final String USERS = "users";
     public static final String ID = "id";
     public static final String CHAT = "chat" ;
-    public static final String ACCESSED = "accessed";
 
     public static final String CREATION_DATE = "creationDate";
     public static final String OFFICE = "office";
