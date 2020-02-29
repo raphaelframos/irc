@@ -41,10 +41,10 @@ public class UsersDialogFragment extends DialogFragment {
 
 
 
-    public static UsersDialogFragment newInstance(List<User> userlist) {
+    public static UsersDialogFragment newInstance(IrcChannel channel) {
         UsersDialogFragment fragment = new UsersDialogFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("userList", (Serializable) userlist);
+        bundle.putSerializable("channel", channel);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -59,24 +59,16 @@ public class UsersDialogFragment extends DialogFragment {
 
         myToolbar.setTitle("Escolha o usuario!");
         Bundle bundle = getArguments();
-        List<User> userList = (List<User>) bundle.getSerializable("userList");
-
-
+        IrcChannel channel = (IrcChannel) bundle.getSerializable("channel");
         RecyclerView recyclerViewUsersDialog = view.findViewById(R.id.recycler_view_users_dialog);
         recyclerViewUsersDialog.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewUsersDialog.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
 
-        adapter = new UsersDialogAdapter(userList, channelId, this, codigo);
+        adapter = new UsersDialogAdapter(channel, this, codigo);
         recyclerViewUsersDialog.setAdapter(adapter);
-
         setHasOptionsMenu(true);
 
         return view;
-    }
-
-    public UsersDialogFragment setChannelId(String channelId) {
-        this.channelId = channelId;
-        return this;
     }
 
     public UsersDialogFragment setCodeComando(int codigo){
