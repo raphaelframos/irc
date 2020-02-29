@@ -25,15 +25,11 @@ public class UsersDialogAdapter extends RecyclerView.Adapter<UsersDialogAdapter.
 
     private List<User> users;
     private IrcChannel ircChannel;
-    private String channelId;
     private DialogFragment dialogFragment;
-    private int codigo;
 
-
-    public UsersDialogAdapter(IrcChannel ircChannel, DialogFragment dialogFragment, int codigo) {
+    public UsersDialogAdapter(IrcChannel ircChannel, DialogFragment dialogFragment) {
         this.ircChannel = ircChannel;
         this.dialogFragment = dialogFragment;
-        this.codigo = codigo;
     }
 
     @NonNull
@@ -50,12 +46,9 @@ public class UsersDialogAdapter extends RecyclerView.Adapter<UsersDialogAdapter.
         holder.textViewName.setText(user.getName());
         holder.itemView.setOnClickListener((View v) -> {
 
-          switch (codigo) {
-              case 1:
-                  FirebaseRepository.banUserforChannel(channelId,user);
+                  FirebaseRepository.banUserforChannel(ircChannel.getId(), user);
                   dialogFragment.dismiss();
-                  break;
-          }
+
 
         });
 

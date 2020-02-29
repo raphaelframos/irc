@@ -116,7 +116,7 @@ public class ChatActivity extends AppCompatActivity {
 
             switch (message) {
                 case "/kick":
-                    UsersDialogFragment.newInstance(channel).setUser(usuario).setCodeComando(1).show(getSupportFragmentManager(), "users");
+                    UsersDialogFragment.newInstance(channel).show(getSupportFragmentManager(), "users");
                     break;
                 case "/quit":
                     FirebaseRepository.remove(channel,user);

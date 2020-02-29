@@ -34,10 +34,7 @@ import java.util.List;
 public class UsersDialogFragment extends DialogFragment {
 
     private UsersDialogAdapter adapter;
-    private ViewModelChannel viewModelChannel;
-    private String channelId;
     private int codigo;
-    private User user;
 
 
 
@@ -69,15 +66,6 @@ public class UsersDialogFragment extends DialogFragment {
         setHasOptionsMenu(true);
 
         return view;
-    }
-
-    public UsersDialogFragment setCodeComando(int codigo){
-        this.codigo = codigo;
-        return this;
-    }
-    public UsersDialogFragment setUser(User user) {
-        this.user = user;
-        return this;
     }
 
     @Override
