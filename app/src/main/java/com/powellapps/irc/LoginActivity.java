@@ -114,6 +114,8 @@ public class LoginActivity extends FragmentActivity {
                     User user = new User(account.getDisplayName(), id);
                     NicknameController.alertaDeNickName(LoginActivity.this, user);
 
+                } else {
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 }
 
             }

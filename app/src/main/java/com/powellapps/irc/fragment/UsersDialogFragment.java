@@ -25,6 +25,7 @@ import com.powellapps.irc.model.IrcChannel;
 import com.powellapps.irc.model.User;
 import com.powellapps.irc.viewmodel.ViewModelChannel;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -34,16 +35,17 @@ public class UsersDialogFragment extends DialogFragment {
 
     private UsersDialogAdapter adapter;
     private ViewModelChannel viewModelChannel;
-    private List<User> userList;
-    private List<User> listaNova;
     private String channelId;
     private int codigo;
     private User user;
 
 
 
-    public static UsersDialogFragment newInstance() {
+    public static UsersDialogFragment newInstance(List<User> userlist) {
         UsersDialogFragment fragment = new UsersDialogFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("userList", (Serializable) userlist);
+        fragment.setArguments(bundle);
         return fragment;
     }
 
@@ -56,23 +58,20 @@ public class UsersDialogFragment extends DialogFragment {
         Toolbar myToolbar = view.findViewById(R.id.toolbar_users_dialog);
 
         myToolbar.setTitle("Escolha o usuario!");
+        Bundle bundle = getArguments();
+        List<User> userList = (List<User>) bundle.getSerializable("userList");
+
 
         RecyclerView recyclerViewUsersDialog = view.findViewById(R.id.recycler_view_users_dialog);
         recyclerViewUsersDialog.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewUsersDialog.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
 
-        userList.remove(user);
         adapter = new UsersDialogAdapter(userList, channelId, this, codigo);
         recyclerViewUsersDialog.setAdapter(adapter);
 
         setHasOptionsMenu(true);
 
         return view;
-    }
-
-    public UsersDialogFragment setList(List<User> userList) {
-      this.userList = userList;
-      return this;
     }
 
     public UsersDialogFragment setChannelId(String channelId) {
