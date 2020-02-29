@@ -20,6 +20,7 @@ import com.powellapps.irc.R;
 import com.powellapps.irc.model.User;
 import com.powellapps.irc.utils.ConstantsUtils;
 import com.powellapps.irc.utils.FirebaseUtils;
+import com.powellapps.irc.utils.MessageUtils;
 
 public class NicknameController {
 
@@ -54,9 +55,9 @@ public class NicknameController {
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.putString("nick",editTextlocal.getText().toString());
                             editor.commit();
-
+                            activity.startActivity(new Intent(activity, MainActivity.class));
                         } else {
-                            Toast.makeText(activity, "Nick já utilizado", Toast.LENGTH_SHORT).show();
+                            MessageUtils.mostraAlerta("Nick já utilizado!", "Esse nick já esdtá sendo utilizado, escolha outro.", activity);
                         }
                     }
                 });

@@ -56,7 +56,6 @@ public class ChatActivity extends AppCompatActivity {
         button = findViewById(R.id.fab_send);
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, COMANDOS);
         editTextMessage = findViewById(R.id.editText_mensagem);
-
         editTextMessage.setAdapter(arrayAdapter);
 
         messagelist = new ArrayList<>();
@@ -117,10 +116,10 @@ public class ChatActivity extends AppCompatActivity {
 
             switch (message) {
                 case "/kick":
-                    UsersDialogFragment.newInstance().setList(channel.getUsers()).setUser(usuario).setCodeComando(1).show(getSupportFragmentManager(), "users");
+                    UsersDialogFragment.newInstance(channel.getUsers()).setUser(usuario).setCodeComando(1).show(getSupportFragmentManager(), "users");
                     break;
                 case "/quit":
-                    UsersDialogFragment.newInstance().setList(channel.getUsers()).setUser(usuario).setCodeComando(2).show(getSupportFragmentManager(), "users");
+                    UsersDialogFragment.newInstance(channel.getUsers()).setUser(usuario).setCodeComando(2).show(getSupportFragmentManager(), "users");
                     break;
 
                     default:
