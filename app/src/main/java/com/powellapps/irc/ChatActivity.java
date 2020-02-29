@@ -116,7 +116,9 @@ public class ChatActivity extends AppCompatActivity {
 
             switch (message) {
                 case "/kick":
-                    UsersDialogFragment.newInstance(channel.getUsers()).setUser(usuario).setCodeComando(1).show(getSupportFragmentManager(), "users");
+                    if(channel.getCreator().equalsIgnoreCase(user.getId())){
+                        UsersDialogFragment.newInstance(channel.getUsers()).setUser(usuario).setCodeComando(1).show(getSupportFragmentManager(), "users");
+                    }
                     break;
                 case "/quit":
                     UsersDialogFragment.newInstance(channel.getUsers()).setUser(usuario).setCodeComando(2).show(getSupportFragmentManager(), "users");
